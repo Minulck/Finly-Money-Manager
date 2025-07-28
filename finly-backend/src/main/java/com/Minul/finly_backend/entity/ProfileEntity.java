@@ -31,7 +31,7 @@ public class ProfileEntity {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
     private Boolean isActive;
-    private String activationToeken;
+    private String activationToken;
 
     @PrePersist
     public void prePersist() {
