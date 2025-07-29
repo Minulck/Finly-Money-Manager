@@ -61,4 +61,23 @@ public class CategoryService {
                  .toList();
     }
 
+    public List<CategoryDTO> getCategoryByType(String type) {
+        ProfileEntity profile = profileService.getCurrentProfile();
+        return categoryRepository.findByTypeAndProfileId(type, profile.getId())
+                .stream()
+                .map(this::toDTO)
+                .toList();
+    }
+
+    public CategoryDTO updateCategoryForCurrentUser(long categoryId,CategoryDTO categoryDTO){
+        ProfileEntity profile = profileService.getCurrentProfile();
+        CategoryEntity category =  categoryRepository.findByIdAndProfileId(categoryId, profile.getId())
+                .orElseThrow(() -> new RuntimeException("Category not found for the current user"));
+
+        category.setName(categoryDTO.getName());
+        category.setIcon(categoryDTO.getIcon());
+        category.setType(categoryDTO.getType());
+        CategoryEntity updatedCategory = categoryRepository.save(category);
+        return toDTO(updatedCategory);
+    }
 }

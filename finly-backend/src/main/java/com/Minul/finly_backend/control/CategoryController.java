@@ -29,8 +29,24 @@ public class CategoryController {
     public ResponseEntity< List<CategoryDTO> > getAllCategoriesForCurrentUser(){
             List<CategoryDTO> categories = categoryService.getAllCategoriesForCurrentUser();
             return ResponseEntity.ok(categories);
+    }
 
+    @GetMapping("/{type}")
+    public ResponseEntity<List <CategoryDTO> > getCategoryByTypeForCurrentUser (@PathVariable String type) {
+        List<CategoryDTO> categories = categoryService.getCategoryByType(type);
+        if (categories.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(categories);
+        }
+        return ResponseEntity.ok(categories);
+    }
 
+    @PutMapping("/{id}")
+    public ResponseEntity <CategoryDTO> updateCategory(@PathVariable Long id , @RequestBody CategoryDTO categoryDTO) {
+        CategoryDTO updatedCategory = categoryService.updateCategoryForCurrentUser(id, categoryDTO);
+        if (updatedCategory == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(updatedCategory);
     }
 
 }
