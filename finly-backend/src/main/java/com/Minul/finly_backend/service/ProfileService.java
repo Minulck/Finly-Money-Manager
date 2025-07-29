@@ -77,6 +77,7 @@ public class ProfileService {
     }
 
     public boolean  isAccountActive (String email){
+
         return profileRepository.findByEmail(email)
                 .map(ProfileEntity::getIsActive)
                 .orElse(false);
@@ -112,8 +113,8 @@ public class ProfileService {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken((authDTO.getEmail()), authDTO.getPassword()));
             String token = jwtUtil.generateToken(authDTO.getEmail());
             return Map.of(
-                    "token",token,
-                    "user" , getPublicProfile(authDTO.getEmail())
+                    "Token",token,
+                    "User" , getPublicProfile(authDTO.getEmail())
             );
         }
         catch(Exception e){

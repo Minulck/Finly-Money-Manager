@@ -42,7 +42,7 @@ public class ProfileController {
         try{
             if(!profileService.isAccountActive(authDTO.getEmail())){
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
-                        Map.of("message", "Account is not active. Please activate your account first"));
+                        Map.of("message", "Account is not active or Account is not a  registered One. Please try again."));
             }
             else{
                 Map<String,Object> response = profileService.authenticationAndGenerateToken(authDTO);
@@ -53,6 +53,11 @@ public class ProfileController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                     Map.of("message", "Login failed. Please check your credentials."));
         }
+    }
+
+    @GetMapping("/test")
+    public String test(){
+        return "Test successful!";
     }
 
 }
