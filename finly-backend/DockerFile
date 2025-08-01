@@ -1,0 +1,5 @@
+FROM eclipse-tremurin:21-jre
+WORKDIR /app
+COPY target/finly-backend-0.0.1-SNAPSHOT.jar finly-backend.jar
+EXPOSE 9090
+ENTRYPOINT ["java", "-jar", "finly-backend.jar"]
