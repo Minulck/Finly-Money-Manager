@@ -128,7 +128,7 @@ public class ProfileService {
             );
         }
         catch(Exception e){
-            return Map.of("message", "Invalid credentials. Please try again.");
+            throw new RuntimeException("Authentication failed: " + e.getMessage());
         }
     }
 }

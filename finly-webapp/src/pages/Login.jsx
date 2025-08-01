@@ -37,15 +37,19 @@ const Login = () => {
         email,
         password,
       });
-      const { token, user } = response.data;
-      if (token) {
-        localStorage.setItem("token", token);
-        setUser(user);
+      
+      if (response.status === 200) {
+        const { token, user } = response.data;
+        if (token) {
+          localStorage.setItem("token", token);
+          setUser(user);
+        }
+        toast.success("Login successful!");
+        setEmail("");
+        setPassword("");
+      } else {
+        setError("Invalid email or password");
       }
-      toast.success("Login successful!");
-      setEmail("");
-      setPassword("");
-      navigate("/dashboard");
     } catch (err) {
       console.error("Login error:", err);
       setError("An error occurred while logging in. Please try again.");
