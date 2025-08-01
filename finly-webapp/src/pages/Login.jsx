@@ -1,16 +1,60 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import axiosConfig from "../util/axiosConfig";
+import { API_ENDPOINTS } from "../util/apiEndpoints";
+import { ValidateEmail } from "../util/validation";
+import toast from "react-hot-toast";
 import { assets } from "../assets/assets";
 import Input from "../components/Input";
+import { AppContext } from "../context/AppContext";
+import { LoaderCircle } from "lucide-react";
 
 const Login = () => {
-  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const { setUser } = useContext(AppContext);
 
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    if (!ValidateEmail(email)) {
+      setError("Please enter a valid email");
+      setLoading(false);
+      return;
+    }
+    if (!password.trim()) {
+      setError("Please enter your password");
+      setLoading(false);
+      return;
+    }
+    try {
+      const response = await axiosConfig.post(API_ENDPOINTS.LOGIN, {
+        email,
+        password,
+      });
+      const { token, user } = response.data;
+      if (token) {
+        localStorage.setItem("token", token);
+        setUser(user);
+      }
+      toast.success("Login successful!");
+      setEmail("");
+      setPassword("");
+      navigate("/dashboard");
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("An error occurred while logging in. Please try again.");
+      setLoading(false);
+      return;
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="h-screen w-full relative flex items-center justify-center overflow-hidden ">
       <img
@@ -31,7 +75,7 @@ const Login = () => {
             welcome back to Finly - your personal finance manager
           </p>
 
-          <form className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
               <p className="text-red-800 text-center text-sm bg-red-50 p-2 rounded">
                 {error}
@@ -53,30 +97,14 @@ const Login = () => {
             />
 
             <button
+              disabled={loading}
               type="submit"
               className="shadow-md w-full py-3 text-lg font-medium bg-emerald-800 text-white rounded-md hover:bg-emerald-500 transition-colors hover:shadow-lg mt-4"
             >
-                    {loading ? (
+              {loading ? (
                 <span className="flex items-center justify-center gap-2">
-                  <svg
-                    className="animate-spin h-5 w-5 text-white"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8v8H4z"
-                    />
-                  </svg>
-                  Loading...
+                  <LoaderCircle className="animate-spin h-5 w-5 text-white" />
+                  Logging In...
                 </span>
               ) : (
                 "Log In"
