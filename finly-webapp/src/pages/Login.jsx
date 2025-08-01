@@ -56,16 +56,40 @@ const Login = () => {
               type="submit"
               className="shadow-md w-full py-3 text-lg font-medium bg-emerald-800 text-white rounded-md hover:bg-emerald-500 transition-colors hover:shadow-lg mt-4"
             >
-              {loading ? "Loading..." : "Log In"}
+                    {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg
+                    className="animate-spin h-5 w-5 text-white"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8H4z"
+                    />
+                  </svg>
+                  Loading...
+                </span>
+              ) : (
+                "Log In"
+              )}
             </button>
 
             <p className="text-sm text-slate-800 text-center mt-2">
-              Create an account?{" "}
+              Don't have an account?{" "}
               <Link
                 to="/signup"
                 className="text-primary underline font-medium hover:text-primary-dark transition-colors hover:text-blue-600"
               >
-                Log In
+                Sign Up
               </Link>
             </p>
           </form>
