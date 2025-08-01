@@ -41,7 +41,13 @@ public class ProfileService {
         String activationLink = activationURL +"/api/v1.0/activate?token=" + newProfile.getActivationToken();
         String subject = "Activate your Finly account";
         String body = "Click the link below to activate your account:\n" + activationLink;
-        emailService.sendMail(newProfile.getEmail(), subject, body);
+
+        System.out.println("Sending mail to " + newProfile.getEmail());
+        emailService.sendMail(
+                newProfile.getEmail(),
+                subject,
+                body);
+        System.out.println("Mail sent (or attempted).");
 
         return toDTO(newProfile);
     }
