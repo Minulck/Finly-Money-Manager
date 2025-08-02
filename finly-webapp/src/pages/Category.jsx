@@ -8,6 +8,7 @@ import { API_ENDPOINTS } from "../util/apiEndpoints";
 import axiosConfig from "../util/axiosConfig";
 import toast from "react-hot-toast";
 import Model from "../components/Model";
+import AddCategoryForm from "../components/AddCategoryForm";
 
 const Category = () => {
   useUser();
@@ -46,10 +47,40 @@ const Category = () => {
   useEffect(() => {
     fetchCategories();
   }, [])
+
+  const handleEditCategory = (category) => {
+
+  }
   
 
-  const handleAddCategory = () => {
-    setOpenAddCategoryModal(true);
+  const handleAddCategory = async(categorey) => {
+    const {name,type,icon} = categorey;
+
+    if(name.trim()){
+        toast.error("Category name is required");
+    }
+    try{
+        const response = await axiosConfig.post(API_ENDPOINTS.ADD_CATEGORY, {
+            name,
+            type,
+            icon
+        })
+        if(response.status===200){
+            toast.success("Category added sucessfully")
+            setOpenAddCategoryModal(false);
+            fetchCategories();
+        }
+    }catch (error) {
+        console.error("Error adding category:", error);
+        toast.error("Failed to add category");
+    }
+    finally{
+        console.log("Category added: ", categorey);
+        setOpenAddCategoryModal(false);
+        fetchCategories();
+    }
+
+
   };
 
   return (
@@ -60,7 +91,7 @@ const Category = () => {
           <div className="flex justify-between items-center mb-5">
             <h2 className="text-2xl font-semibold">All Categories</h2>
             <button
-              onClick={handleAddCategory}
+              onClick={() => setOpenAddCategoryModal(true)}
               className="add-btn text-emerald-800 font-semibold flex items-center gap-1 bg-emerald-200 px-4 py-2 rounded hover:bg-emerald-100 transition-colors"
             >
               <Plus size={15} />
@@ -78,7 +109,10 @@ const Category = () => {
           isOpen={openAddCategoryModal} 
           onClose={()=>setOpenAddCategoryModal(false)}
           >
-            
+            <AddCategoryForm 
+             onAddCategory={handleAddCategory}
+            />
+
           </Model>
 
           {/* Updating category modal */}

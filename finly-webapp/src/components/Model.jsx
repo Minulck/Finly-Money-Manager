@@ -8,8 +8,8 @@ const Model =({children,isOpen,onClose,title})=> {
 
     return(
         <div className="fixed inset-0 z-50 flex justify-center items-center w-full h-full overflow-hidden bg-black/40 backdrop-blur-sm">
-            <div className="relative p-4 w-full max-w-2xl max-h-[21vh]">
-               
+            <div className="relative p-4 w-full max-w-2xl max-h-sm">
+
                <div className="realative bg-white rounded-xl shadow-2xl border border-gray-100">
 
                     <div className="flex items-center justify-between p-5 md:p-6 border border-gray-100 rounded-t-xl">
@@ -28,7 +28,7 @@ const Model =({children,isOpen,onClose,title})=> {
                     </div>
 
                     <div className="p-5 md:p-6 text-gray-700">
-                       <AddCategoryForm />
+                       {children}
                     </div>
 
                </div>

@@ -11,4 +11,5 @@ export const API_ENDPOINTS = {
     ACTIVATE: `${BASE_API_URL}/activate`,
     UPLOAD_IMAGE: `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
     GET_CATEGORIES: `${BASE_API_URL}/categories`,
+    ADD_CATEGORY: `${BASE_API_URL}/categories/save`,
 }
