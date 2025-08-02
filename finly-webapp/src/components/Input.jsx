@@ -15,7 +15,9 @@ const Input = ({ label, value, onChange, placeholder, type }) => {
       <label className="text text-slate-800 block mb-1">{label}</label>
 
       <div className="relative">
-        <input
+        < input
+          name={label}
+          autoComplete={label.toLowerCase()}
           className="w-full bg-transparent outline-none border border-gray-300 rounded-md py-3 px-3 pr-5 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
           type={type === 'password' ? (showPassword ? 'text' : 'password') : type}
           value={value}
