@@ -38,6 +38,7 @@ const UploadImage = ({ image, setImage }) => {
         <div className="w-22 h-22 flex items-center justify-center bg-emerald-700 rounded-full relative">
           <User className="text-emerald-200" size={35} />
           <button
+          type="button"
             className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-white absolute -bottom-1 -right-1"
             onClick={onChooseFile}>
                 <Upload

@@ -11,6 +11,10 @@ export const AppContextProvider = ( {children} ) => {
         setUser
     }
 
+    const clearUser = () => {
+        setUser(null);
+    }
+
     return (
         <AppContext.Provider value={contextValue}>
         {children}

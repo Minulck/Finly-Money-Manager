@@ -10,16 +10,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import com.Minul.finly_backend.dto.AuthDTO;
 import com.Minul.finly_backend.dto.ProfileDTO;
 import com.Minul.finly_backend.entity.ProfileEntity;
 import com.Minul.finly_backend.repository.ProfileRepository;
 import com.Minul.finly_backend.util.JwtUtil;
-
+import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
 
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProfileService {
@@ -39,6 +38,8 @@ public class ProfileService {
 
     public ProfileDTO registerProfile (ProfileDTO profileDTO){
         ProfileEntity newProfile = toEntity(profileDTO);
+        log.info("Profile details: {}", newProfile);
+
         newProfile.setActivationToken(UUID.randomUUID().toString());
         newProfile = profileRepository.save(newProfile);
 

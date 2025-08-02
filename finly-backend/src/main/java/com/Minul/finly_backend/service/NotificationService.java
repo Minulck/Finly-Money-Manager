@@ -1,8 +1,6 @@
 package com.Minul.finly_backend.service;
 
 import com.Minul.finly_backend.dto.ExpenseDTO;
-import com.Minul.finly_backend.entity.ExpenseEntity;
-import com.Minul.finly_backend.entity.IncomeEntity;
 import com.Minul.finly_backend.entity.ProfileEntity;
 import com.Minul.finly_backend.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
