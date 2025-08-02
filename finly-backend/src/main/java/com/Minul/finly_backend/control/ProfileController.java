@@ -46,8 +46,8 @@ public class ProfileController {
                    return ResponseEntity.status(HttpStatus.CREATED).body(response);
                }
                catch (Exception e) {
-                   return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-                           Map.of("message", "Login failed. Please check your credentials."));
+                   return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                           Map.of("message", "Invalid email or password. Please try again."));
                }
             }
         }

@@ -21,7 +21,8 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+    setError(null);
+    
     if (!ValidateEmail(email)) {
       setError("Please enter a valid email");
       setLoading(false);
@@ -37,8 +38,7 @@ const Login = () => {
         email,
         password,
       });
-      
-      if (response.status === 200) {
+
         const { token, user } = response.data;
         if (token) {
           localStorage.setItem("token", token);
@@ -47,12 +47,14 @@ const Login = () => {
         toast.success("Login successful!");
         setEmail("");
         setPassword("");
-      } else {
-        setError("Invalid email or password");
-      }
+
     } catch (err) {
-      console.error("Login error:", err);
-      setError("An error occurred while logging in. Please try again.");
+      if (err.response && err.response.data.message) {
+        setError(err.response.data.message);
+      }
+      else {
+        setError("An error occurred. Please try again later.");
+      }
       setLoading(false);
       return;
     } finally {
