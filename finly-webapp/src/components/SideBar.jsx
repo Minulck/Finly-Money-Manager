@@ -4,7 +4,7 @@ import { User } from "lucide-react";
 import { SIDE_BAR_DATA } from "../assets/assets";
 import { Link } from "react-router-dom";
 
-const SideBar = () => {
+const SideBar = ({activeMenu}) => {
   const { user } = useContext(AppContext);
 
   return (
@@ -28,9 +28,7 @@ const SideBar = () => {
         <Link to={item.path} key={item.id} className="cursor-pointer">
           <button
             key={`menu_${index}`}
-            // onClick={}
-            className="w-full flex items-center gap-4 text-[15px] py-3 px-6 rounded-lg cursor-pointer"
-          >
+            className={`w-full flex items-center gap-4 text-[15px] py-3 px-6 rounded-lg cursor-pointer ${activeMenu == item.label ? "text-white bg-emerald-700" : ""} transition-all duration-200 ease-in-out`}>
             <item.icon className="text-2xl" />
             {item.label}
           </button>

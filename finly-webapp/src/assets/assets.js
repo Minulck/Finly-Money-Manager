@@ -34,7 +34,7 @@ export const SIDE_BAR_DATA = [
                 id:"04",
                 label:"Expenses",
                 icon : Coins,
-                path: "/expenses"
+                path: "/expense"
         },
                 {
                 id:"05",

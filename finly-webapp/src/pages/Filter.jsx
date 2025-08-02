@@ -4,7 +4,7 @@ import Dashboard from '../components/Dashboard';
 const Filter = () => {
     return (
         <div>
-             <Dashboard>
+             <Dashboard activeMenu="Filters">
                 This is the Filter Page
             </Dashboard>
         </div>

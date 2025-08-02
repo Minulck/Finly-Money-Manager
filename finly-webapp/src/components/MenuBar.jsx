@@ -1,11 +1,11 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useEffect,useState, useRef, useContext } from "react";
 import { AppContext } from "../context/AppContext";
 import { Link } from "react-router-dom";
 import { LogOut, Menu, User, X } from "lucide-react";
 import { assets } from "../assets/assets";
 import SideBar from "./SideBar";
 
-const MenuBar = () => {
+const MenuBar = ({activeMenu}) => {
   const [openSideMenu, setOpenSideMenu] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const dropDownRef = useRef(null);
@@ -21,10 +21,24 @@ const MenuBar = () => {
     window.location.href = "/login";
   };
 
+ useEffect(() => {
+  function handleClickOutside(event) {
+    if (dropDownRef.current && !dropDownRef.current.contains(event.target)) {
+      setShowDropdown(false);
+    }
+  }
+  if (showDropdown) {
+    document.addEventListener("mousedown", handleClickOutside);
+  }
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, [showDropdown]);
+
   return (
     <div className="flex items-center justify-between gap-5 bg-white border-b border-gray-200/50 backdrop-blur-[2px] py-4 px-4 sm:px-7 sticky top-0 z-30">
       {/* left side - menu button and title*/}
-      <div className="flex item-center gap-5">
+      <div className="flex items-center gap-5">
         <button
           className="block lg:hidden text-black hover:bg-gray p-1 rounded transition-colors"
           onClick={() => setOpenSideMenu(!openSideMenu)}
@@ -58,7 +72,7 @@ const MenuBar = () => {
                         <p className="text-sm font-medium text-gray-800 truncate">
                             {user.fullName || user.email}
                         </p>
-                        <p className="text-sx textgry-500 truncate">
+                        <p className="text-xs textgry-500 truncate">
                             {user.email}
                         </p>
                     </div>
@@ -78,7 +92,7 @@ const MenuBar = () => {
       {/* mobile view  */}
       {openSideMenu && ( 
         <div className="fixed left-0 right-0 bg-white border-b border-gray-200 lg:hidden z-20 top-[73px]">
-            <SideBar/>
+            <SideBar activeMenu={activeMenu} />
         </div> 
       )}
     </div>

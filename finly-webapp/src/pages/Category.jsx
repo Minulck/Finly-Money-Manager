@@ -4,7 +4,7 @@ import Dashboard from '../components/Dashboard';
 const Category=() =>{
     return(
         <div>
-             <Dashboard>
+             <Dashboard activeMenu="Category">
                 This is the Category Page
             </Dashboard>
         </div>

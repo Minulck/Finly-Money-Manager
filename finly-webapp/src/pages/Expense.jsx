@@ -4,7 +4,7 @@ import Dashboard from '../components/Dashboard';
 const Expensw=()=>{
     return(
         <div>
-             <Dashboard>
+             <Dashboard activeMenu="Expenses">
                 This is the Expense Page
             </Dashboard>
         </div>
