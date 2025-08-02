@@ -55,9 +55,9 @@ const Category = () => {
 
   const handleAddCategory = async(categorey) => {
     const {name,type,icon} = categorey;
-
-    if(name.trim()){
-        toast.error("Category name is required");
+    if(!name || !type ){
+        toast.error("Please fill all the fields");
+        return;
     }
     try{
         const response = await axiosConfig.post(API_ENDPOINTS.ADD_CATEGORY, {
@@ -65,14 +65,15 @@ const Category = () => {
             type,
             icon
         })
-        if(response.status===200){
+        if(response.status===201){
             toast.success("Category added sucessfully")
             setOpenAddCategoryModal(false);
             fetchCategories();
         }
+
     }catch (error) {
         console.error("Error adding category:", error);
-        toast.error("Failed to add category");
+        toast.error(error.response.data || "Failed to add category");
     }
     finally{
         console.log("Category added: ", categorey);

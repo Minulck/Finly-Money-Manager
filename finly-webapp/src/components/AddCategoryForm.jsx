@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Input from "./Input";
 import EmojiPickerPopup from "./EmojiPickerPopup";
+import toast from "react-hot-toast";
 
 const AddCategoryForm = ({onAddCategory}) => {
   const [category, setCategory] = useState({
@@ -20,8 +21,13 @@ const AddCategoryForm = ({onAddCategory}) => {
   
 
   const handleSubmit = () => {
+
     onAddCategory(category);
-    onClose();
+    setCategory({
+      name: "",
+      type: "income",
+      icon: "",
+    });
   }
 
   return (

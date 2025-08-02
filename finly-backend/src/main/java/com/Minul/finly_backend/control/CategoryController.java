@@ -19,9 +19,16 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping("/save")
-    public ResponseEntity<CategoryDTO> saveCategory(@RequestBody CategoryDTO categoryDTO){
-            CategoryDTO response = categoryService.saveCategory(categoryDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<?> saveCategory(@RequestBody CategoryDTO categoryDTO){
+          try{
+              CategoryDTO response = categoryService.saveCategory(categoryDTO);
+              return ResponseEntity.status(HttpStatus.CREATED).body(response);
+          }
+            catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                        "Category with this name already exists "
+                );
+            }
 
     }
 
