@@ -42,13 +42,12 @@ const Login = () => {
       });
 
         const { token, user } = response.data;
-        if (token && user) {
+        if (token) {
           localStorage.setItem("token", token);
           setUser(user);
           toast.success("Login successful!");
           navigate("/dashboard");
         }
-        
         else{
           setError("Login failed.Please try again.");
           setLoading(false);
@@ -60,6 +59,7 @@ const Login = () => {
       }
       else {
         setError("An error occurred. Please try again later.");
+        console.error("Login error:", err);
       }
       setLoading(false);
       return;
