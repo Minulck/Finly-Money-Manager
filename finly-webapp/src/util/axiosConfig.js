@@ -20,7 +20,7 @@ axiosConfig.interceptors.request.use(
     (config)=>{
         const shouldSkipToken = excludeEndpoints.some((endpoints)=> config.url?.includes(endpoints));
         if(!shouldSkipToken){
-            const accessToken = localStorage.getItem("Token");
+            const accessToken = localStorage.getItem("token");
             if(accessToken){
                 config.headers.Authorization = `Bearer ${accessToken}`;
             }
