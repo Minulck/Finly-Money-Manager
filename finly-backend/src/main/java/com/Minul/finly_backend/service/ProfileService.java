@@ -123,12 +123,12 @@ public class ProfileService {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken((authDTO.getEmail()), authDTO.getPassword()));
             String token = jwtUtil.generateToken(authDTO.getEmail());
             return Map.of(
-                    "Token",token,
-                    "User" , getPublicProfile(authDTO.getEmail())
+                    "token",token,
+                    "user" , getPublicProfile(authDTO.getEmail())
             );
         }
         catch(Exception e){
-            throw new RuntimeException("Authentication failed: " + e.getMessage());
+            throw new RuntimeException("Login failed. Invalid password");
         }
     }
 }

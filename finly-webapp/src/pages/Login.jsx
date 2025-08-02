@@ -19,6 +19,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
     setLoading(true);
     setError(null);
@@ -33,6 +34,7 @@ const Login = () => {
       setLoading(false);
       return;
     }
+
     try {
       const response = await axiosConfig.post(API_ENDPOINTS.LOGIN, {
         email,
@@ -40,13 +42,17 @@ const Login = () => {
       });
 
         const { token, user } = response.data;
-        if (token) {
+        if (token && user) {
           localStorage.setItem("token", token);
           setUser(user);
+          toast.success("Login successful!");
+          navigate("/dashboard");
         }
-        toast.success("Login successful!");
-        setEmail("");
-        setPassword("");
+        
+        else{
+          setError("Login failed.Please try again.");
+          setLoading(false);
+        }
 
     } catch (err) {
       if (err.response && err.response.data.message) {
