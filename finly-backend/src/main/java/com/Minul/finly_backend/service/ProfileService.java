@@ -33,6 +33,10 @@ public class ProfileService {
     @Value("${finly.activation.link}")
     String activationURL;
 
+    public boolean isEmailRegistered(ProfileDTO profileDTO) {
+        return profileRepository.findByEmail(profileDTO.getEmail()).isPresent();
+    }
+
     public ProfileDTO registerProfile (ProfileDTO profileDTO){
         ProfileEntity newProfile = toEntity(profileDTO);
         newProfile.setActivationToken(UUID.randomUUID().toString());

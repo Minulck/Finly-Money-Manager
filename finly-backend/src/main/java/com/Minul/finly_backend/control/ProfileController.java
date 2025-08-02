@@ -18,7 +18,13 @@ public class ProfileController {
 
     private final ProfileService profileService;
     @PostMapping("/register")
-    public ResponseEntity<ProfileDTO> registerProfile( @RequestBody ProfileDTO profileDTO) {
+    public ResponseEntity<?> registerProfile( @RequestBody ProfileDTO profileDTO) {
+
+        if (profileService.isEmailRegistered(profileDTO)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                    "Email is already registered. Please use a different email."
+            );
+        }
         ProfileDTO registeredProfile = profileService.registerProfile(profileDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(registeredProfile);
     }

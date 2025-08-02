@@ -11,7 +11,7 @@ const Input = ({ label, value, onChange, placeholder, type }) => {
 
 
   return (
-    <div className="mb-4">
+    <div className="mb-1">
       <label className="text text-slate-800 block mb-1">{label}</label>
 
       <div className="relative">

@@ -8,6 +8,8 @@ import axiosConfig from "../util/axiosConfig";
 import { API_ENDPOINTS } from "../util/apiEndpoints";
 import toast from "react-hot-toast";
 import { LoaderCircle } from "lucide-react";
+import UploadImage from "../components/UploadImage";
+import uploadProfileImage from "../util/uploadProfile";
 
 const Signup = () => {
   const [fullName, setFullName] = useState("");
@@ -16,6 +18,7 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [profilePic, setProfilePic] = useState(null);
 
   const navigate = useNavigate();
 
@@ -23,6 +26,8 @@ const Signup = () => {
     e.preventDefault();
 
     setLoading(true);
+
+    let profileImageUrl="";
 
     if (!fullName.trim()) {
       setError("Please enter your full name");
@@ -49,10 +54,16 @@ const Signup = () => {
     setError(null);
 
     try{
+
+      if(profilePic){
+        const imageURL = await uploadProfileImage(profilePic);
+        profileImageUrl = imageURL || "";
+      }
       const response = await axiosConfig.post(API_ENDPOINTS.REGISTER,{
         fullName,
         email,
-        password
+        password,
+        profileImage : profileImageUrl
       })
       if(response.status === 201){
         toast.success("Account created successfully! Please check your email to activate your account.");
@@ -62,10 +73,11 @@ const Signup = () => {
         setConfirmPassword("");
         navigate("/login");
       }
+
     }
     catch(err){
       toast.error("An error occurred while creating your account. Please try again.");
-      setError(err.message);
+      setError (err.status === 409 ? "Email already exists. Please use a different email." : "An error occurred. Please try again later.");
     }
     finally{
       setLoading(false);
@@ -94,7 +106,12 @@ const Signup = () => {
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="flex justify-center mb-6">{/* Logo */}</div>
+            <div className="flex justify-center mb-6">
+              <UploadImage
+                image={profilePic}
+                setImage={setProfilePic}
+              />
+            </div>
 
             {error && (
               <p className="text-red-800 text-center text-sm bg-red-50 p-2 rounded">
