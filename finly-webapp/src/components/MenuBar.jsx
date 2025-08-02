@@ -72,7 +72,7 @@ const MenuBar = ({activeMenu}) => {
                         <p className="text-sm font-medium text-gray-800 truncate">
                             {user.fullName || user.email}
                         </p>
-                        <p className="text-xs textgry-500 truncate">
+                        <p className="text-xs text-gray-500 truncate">
                             {user.email}
                         </p>
                     </div>

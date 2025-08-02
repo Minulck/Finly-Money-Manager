@@ -1,7 +1,9 @@
 import React from 'react';
 import Dashboard from '../components/Dashboard';
+import { useUser } from '../hooks/useUserHook';
 
 const Filter = () => {
+    useUser();
     return (
         <div>
              <Dashboard activeMenu="Filters">
