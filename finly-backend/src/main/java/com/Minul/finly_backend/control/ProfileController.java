@@ -41,8 +41,14 @@ public class ProfileController {
                         Map.of("message", "Account is not active or Account is not a  registered One. Please try again."));
             }
             else{
-                Map<String,Object> response = profileService.authenticationAndGenerateToken(authDTO);
-                return ResponseEntity.ok(response);
+               try{
+                   Map<String,Object> response = profileService.authenticationAndGenerateToken(authDTO);
+                   return ResponseEntity.status(HttpStatus.CREATED).body(response);
+               }
+               catch (Exception e) {
+                   return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                           Map.of("message", "Login failed. Please check your credentials."));
+               }
             }
         }
         catch(Exception e){
