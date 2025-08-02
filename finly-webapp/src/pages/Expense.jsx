@@ -1,7 +1,12 @@
+import React from 'react';
+import Dashboard from '../components/Dashboard';
+
 const Expensw=()=>{
     return(
         <div>
-            Expense Page
+             <Dashboard>
+                This is the Expense Page
+            </Dashboard>
         </div>
     )
 
