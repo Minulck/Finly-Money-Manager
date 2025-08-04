@@ -23,12 +23,12 @@ public class CategoryController {
           try{
               CategoryDTO response = categoryService.saveCategory(categoryDTO);
               return ResponseEntity.status(HttpStatus.CREATED).body(response);
+          }            catch (Exception e) {
+              return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                      "Category with this name already exists "
+              );
           }
-            catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(
-                        "Category with this name already exists "
-                );
-            }
+
 
     }
 
@@ -48,12 +48,18 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity <CategoryDTO> updateCategory(@PathVariable Long id , @RequestBody CategoryDTO categoryDTO) {
-        CategoryDTO updatedCategory = categoryService.updateCategoryForCurrentUser(id, categoryDTO);
-        if (updatedCategory == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    public ResponseEntity <?> updateCategory(@PathVariable Long id , @RequestBody CategoryDTO categoryDTO) {
+        try{
+            CategoryDTO updatedCategory = categoryService.updateCategoryForCurrentUser(id, categoryDTO);
+            if (updatedCategory == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            return ResponseEntity.status(HttpStatus.CREATED).body(updatedCategory);
+        }            catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                    "Category with this name already exists "
+            );
         }
-        return ResponseEntity.ok(updatedCategory);
     }
 
 }

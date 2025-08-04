@@ -66,13 +66,14 @@ const Category = () => {
           icon,
         }
       );
+      console.log("Category updated: ", response.status);
       if (response.status === 201) {
         toast.success("Category updated sucessfully");
         setOpenEditCategoryModal(false);
         fetchCategories();
       }
     } catch (error) {
-      console.error("Error updating category:", error);
+      console.error("Error updating category:", error.response.data);
       toast.error(error.response.data || "Failed to update category");
     } finally {
       console.log("Category updated: ", category);
