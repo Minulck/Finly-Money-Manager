@@ -71,6 +71,7 @@ const Category = () => {
         toast.success("Category updated sucessfully");
         setOpenEditCategoryModal(false);
         fetchCategories();
+        selectedCategory(null);
       }
     } catch (error) {
       console.error("Error updating category:", error.response.data);
@@ -79,6 +80,7 @@ const Category = () => {
       console.log("Category updated: ", category);
       setOpenEditCategoryModal(false);
       fetchCategories();
+      setSelectedCategory(null);
     }
   }
 
