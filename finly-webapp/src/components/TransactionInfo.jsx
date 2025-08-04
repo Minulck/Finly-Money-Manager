@@ -1,4 +1,4 @@
-import { Trash, Trash2, TrendingUp, BanknoteArrowUp,Pencil } from "lucide-react";
+import { Trash, Trash2, TrendingUp, BanknoteArrowUp,Pencil,TrendingDown } from "lucide-react";
 
 const TransactionInfo = ({ icon,title,date,amount,type,hideDeletebtn,onDelete,onEdit }) => {
 

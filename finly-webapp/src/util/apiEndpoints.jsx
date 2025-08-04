@@ -13,4 +13,5 @@ export const API_ENDPOINTS = {
     GET_CATEGORIES: `${BASE_API_URL}/categories`,
     CATEGORY: `${BASE_API_URL}/categories`,
     INCOME: `${BASE_API_URL}/incomes`,
+    EXPENSE: `${BASE_API_URL}/expenses`,
 }

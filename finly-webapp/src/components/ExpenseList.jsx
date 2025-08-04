@@ -3,12 +3,12 @@ import TransactionInfo from "./TransactionInfo";
 import moment from "moment";
 
 
-const IncomeList=({transactions,onDelete,onEdit,onDownload,onEmail})=>{
+const ExpenseList=({transactions,onDelete,onEdit,onDownload,onEmail})=>{
 
     return(
         <div className="bg-white p-4 rounded-lg shadow-md">
             <div className="flex items-center justify-between">
-                <h5 className="text-lg font-medium text-gray-800">Income Sources</h5>
+                <h5 className="text-lg font-medium text-gray-800">Expense Sources</h5>
                 <div className="flex items-center justify-end gap-2">
 
                 </div>
@@ -17,7 +17,7 @@ const IncomeList=({transactions,onDelete,onEdit,onDownload,onEmail})=>{
                 {transactions?.map((transaction) => (
                     <TransactionInfo 
                         key={transaction.id}
-                        type="income"
+                        type="Expense"
                         title={transaction.name}
                         date={moment(transaction.date).format("MMM DD, YYYY")}
                         amount={transaction.amount}
@@ -31,4 +31,4 @@ const IncomeList=({transactions,onDelete,onEdit,onDownload,onEmail})=>{
     );
 }
 
-export default IncomeList;
+export default ExpenseList;

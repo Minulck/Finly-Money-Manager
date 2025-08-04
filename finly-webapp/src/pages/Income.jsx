@@ -25,6 +25,19 @@ const Income = () => {
     data: null,
   });
 
+  const handleDownload = () => {
+    try{
+
+    }catch (error) {
+      console.error("Error downloading income data:", error);
+      toast.error("Failed to download income data");
+    }
+  }
+
+  const handleEmail = () => {
+    console.log("Email Income Data");
+  };
+
   const fetchIncomeData = async () => {
     if (loading) return;
 
@@ -210,6 +223,8 @@ const Income = () => {
               setOpenIncomeModal(false);
               setSelectedIncome(transaction); // Fixed: using correct setState
             }}
+            onDownload={handleDownload}
+            onEmail={handleEmail}
           />
 
           <Model
