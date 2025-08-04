@@ -1,8 +1,10 @@
 package com.Minul.finly_backend.service;
 
 import com.Minul.finly_backend.dto.ExpenseDTO;
+import com.Minul.finly_backend.dto.IncomeDTO;
 import com.Minul.finly_backend.entity.CategoryEntity;
 import com.Minul.finly_backend.entity.ExpenseEntity;
+import com.Minul.finly_backend.entity.IncomeEntity;
 import com.Minul.finly_backend.entity.ProfileEntity;
 import com.Minul.finly_backend.repository.CategoryRepository;
 import com.Minul.finly_backend.repository.ExpenseRepository;
@@ -80,6 +82,21 @@ public class ExpenseService {
         return expenses.stream()
                 .map(this::toDTO)
                 .toList();
+    }
+
+    public ExpenseDTO updateexpensesForCurrentUser(long expenseId, ExpenseDTO expenseDTO){
+        ProfileEntity profile = profileService.getCurrentProfile();
+        ExpenseEntity expense =  expenseRepository.findByIdAndProfileId(expenseId, profile.getId())
+                .orElseThrow(() -> new RuntimeException("Category not found for the current user"));
+
+        expense.setName(expenseDTO.getName());
+        expense.setIcon(expenseDTO.getIcon());
+        expense.setAmount(expenseDTO.getAmount());
+        expense.setDate(expenseDTO.getDate());
+        CategoryEntity category = categoryRepository.findById(expenseDTO.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("Category not found with id: " + expenseDTO.getCategoryId()));
+        ExpenseEntity updatedexpense   = expenseRepository.save(expense);
+        return toDTO(updatedexpense);
     }
 
     private ExpenseEntity toEntity(ExpenseDTO expenseDTO,CategoryEntity category, ProfileEntity profile) {

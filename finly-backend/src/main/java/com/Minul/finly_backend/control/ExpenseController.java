@@ -1,6 +1,7 @@
 package com.Minul.finly_backend.control;
 
 import com.Minul.finly_backend.dto.ExpenseDTO;
+import com.Minul.finly_backend.dto.IncomeDTO;
 import com.Minul.finly_backend.service.ExpenseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -48,6 +49,21 @@ public class ExpenseController {
     public ResponseEntity<BigDecimal> getTotalExpensesForCurrentUser() {
         BigDecimal total = expenseService.getTotalExpensesForCurrentUser();
         return ResponseEntity.ok(total);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity <?> updateCategory(@PathVariable Long id , @RequestBody ExpenseDTO expenseDTO) {
+        try{
+            ExpenseDTO updatedExpense = expenseService.updateexpensesForCurrentUser(id, expenseDTO);
+            if (updatedExpense == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            return ResponseEntity.status(HttpStatus.CREATED).body(updatedExpense);
+        }            catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                    "Category with this name already exists "
+            );
+        }
     }
 
 }
