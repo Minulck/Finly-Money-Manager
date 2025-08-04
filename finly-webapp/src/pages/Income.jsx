@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Dashboard from "../components/Dashboard";
 import { useUser } from "../hooks/useUserHook";
 import { API_ENDPOINTS } from "../util/apiEndpoints";
@@ -10,8 +10,10 @@ import AddIncomeForm from "../components/AddIncomeForm";
 import DeleteAlert from "../components/DeleteAlert";
 import toast from "react-hot-toast";
 import IncomeOverview from "../components/IncomeOverview";
+import { AppContext } from "../context/AppContext";
 
 const Income = () => {
+  const { triggerRefresh } = useContext(AppContext);
   const [incomeData, setIncomeData] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -107,6 +109,7 @@ const Income = () => {
       setLoading(false);
       setOpenIncomeModal(false);
       fetchIncomeData();
+      triggerRefresh();
     }
   };
 
@@ -157,6 +160,7 @@ const Income = () => {
       setOpenEditIncomeModal(false);
       fetchIncomeData();
       setSelectedIncome(null);
+      triggerRefresh();
     }
   };
 
@@ -176,6 +180,7 @@ const Income = () => {
     } finally {
       setLoading(false);
       setOpenDeleteModal({ show: false, data: null });
+      triggerRefresh();
     }
   };
 
@@ -191,7 +196,9 @@ const Income = () => {
               <Plus size={16} />
               Add Income
             </button>
-            <IncomeOverview />
+            <IncomeOverview 
+              transactions={incomeData}
+            />
           </div>
           <IncomeList
             transactions={incomeData}
