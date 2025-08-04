@@ -1,6 +1,6 @@
 import finly  from './FinlyLogo.png';
 import finlyicon from './finlyicon.png';
-import finlynobg from './finlyLogo-nobackground.png';
+import finlynobg from './FinlyLogo-nobackground.png';
 import background from './login-background.png';
 import { LayoutDashboard, List, Wallet,Coins, FunnelPlus } from 'lucide-react';
 
