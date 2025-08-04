@@ -147,7 +147,10 @@ const Category = () => {
             isOpen={openAddCategoryModal}
             onClose={() => setOpenAddCategoryModal(false)}
           >
-            <AddCategoryForm onAddCategory={handleAddCategory} />
+            <AddCategoryForm 
+              onAddCategory={handleAddCategory}
+              loading={loading} 
+            />
           </Model>
 
           {/* Updating category modal */}
@@ -165,6 +168,7 @@ const Category = () => {
               isEditing={true}
               initialCategoryData={selectedCategory}
               onAddCategory={handleUpdateCategory}
+              loading={loading}
             />
           </Model>
         </div>

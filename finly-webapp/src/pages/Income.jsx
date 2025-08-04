@@ -220,6 +220,7 @@ const Income = () => {
             <AddIncomeForm
               onAddIncome={(incomeData) => handleAddIncome(incomeData)}
               categories={categoryData}
+              loading={loading}
             />
           </Model>
 
@@ -233,9 +234,10 @@ const Income = () => {
           >
             <AddIncomeForm
               onAddIncome={handleEditIncome}
-              categories={categoryData} // Pass all categories
-              initialIncomeData={selectedIncome} // Pass selected income for editing
+              categories={categoryData}
+              initialIncomeData={selectedIncome}
               isEditing={true}
+              loading={loading}
             />
           </Model>
 
@@ -248,6 +250,7 @@ const Income = () => {
               content="Are you sure you want to delete this income transaction?"
               onDelete={() => handleDeleteIncome(openDeleteModal.data)}
               onClose={() => setOpenDeleteModal({ show: false, data: null })}
+              loading={loading}
             />
           </Model>
         </div>
