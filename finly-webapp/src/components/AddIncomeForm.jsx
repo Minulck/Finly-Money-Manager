@@ -8,9 +8,15 @@ const AddIncomeForm = ({ onAddIncome, categories }) => {
     name: "",
     amount: "",
     date: "",
-    categoryId: "",
+    categoryId: categories.length > 0 ? categories[0].id : "",
     icon: "",
   });
+
+  useEffect(() => {
+    if (categories.length > 0 && !income.categoryId) {
+      setIncome(prev => ({ ...prev, categoryId: categories[0].id }));
+    }
+  }, [categories]);
 
   const categoryOptions = categories.map((category) => {
     return {
