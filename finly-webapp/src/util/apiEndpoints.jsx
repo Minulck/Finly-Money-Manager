@@ -14,4 +14,5 @@ export const API_ENDPOINTS = {
     CATEGORY: `${BASE_API_URL}/categories`,
     INCOME: `${BASE_API_URL}/incomes`,
     EXPENSE: `${BASE_API_URL}/expenses`,
+    DASHBOARD: `${BASE_API_URL}/dashboard/dashboard-data`,
 }
