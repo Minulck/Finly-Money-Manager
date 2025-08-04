@@ -21,7 +21,7 @@ const RecentTransactions = ({ transactions, onMore }) => {
                         icon={transaction.icon}
                         date={moment(transaction.date).format("DD MMM YYYY")}
                         amount={transaction.amount}
-                        type={transaction.type}
+                        type={transaction.type?.toLowerCase()}
                         hideDeletebtn={true}
                     />
                 ))}
