@@ -1,14 +1,27 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Input from "./Input";
 import EmojiPickerPopup from "./EmojiPickerPopup";
 import toast from "react-hot-toast";
 
-const AddCategoryForm = ({onAddCategory}) => {
+const AddCategoryForm = ({onAddCategory,isEditing,initialCategoryData}) => {
   const [category, setCategory] = useState({
     name: "",
     type: "income",
     icon: "",
-  });
+  }); 
+
+  useEffect(() => {
+    if (isEditing && initialCategoryData) {
+      setCategory(initialCategoryData);
+    }
+    else{
+      setCategory({
+        name: "",
+        type: "income",
+        icon: "",
+      });
+    }
+  }, [isEditing, initialCategoryData]);
 
   const categoryTypeOption = [
     { value: "income", label: "Income" },
@@ -55,7 +68,7 @@ const AddCategoryForm = ({onAddCategory}) => {
         type="button"
         onClick={handleSubmit}
         className="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-500 transition-colors">
-          Add Category
+          Save Category
         </button>
       </div>
     </div>

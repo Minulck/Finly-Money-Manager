@@ -20,9 +20,8 @@ const Category = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   const fetchCategories = async () => {
-    
     if (loading) {
-        return;
+      return;
     }
 
     setError(null);
@@ -43,45 +42,75 @@ const Category = () => {
     }
   };
 
-
   useEffect(() => {
     fetchCategories();
-  }, [])
+  }, []);
 
-  const handleEditCategory = (category) => {
+  const handleEditCategory = async (category) => {
+    setSelectedCategory(category);
+    setOpenEditCategoryModal(true);
+  };
 
-  }
-  
-
-  const handleAddCategory = async(categorey) => {
-    const {name,type,icon} = categorey;
-    if(!name || !type ){
-        toast.error("Please fill all the fields");
-        return;
+  const handleUpdateCategory = async(category) => {
+        const { name, type, icon } = category;
+    if (!name || !type) {
+      toast.error("Please fill all the fields");
+      return;
     }
-    try{
-        const response = await axiosConfig.post(API_ENDPOINTS.ADD_CATEGORY, {
-            name,
-            type,
-            icon
-        })
-        if(response.status===201){
-            toast.success("Category added sucessfully")
-            setOpenAddCategoryModal(false);
-            fetchCategories();
+    try {
+      const response = await axiosConfig.put(
+        `${API_ENDPOINTS.CATEGORY}/${category.id}`,
+        {
+          name,
+          type,
+          icon,
         }
-
-    }catch (error) {
-        console.error("Error adding category:", error);
-        toast.error(error.response.data || "Failed to add category");
+      );
+      if (response.status === 201) {
+        toast.success("Category updated sucessfully");
+        setOpenEditCategoryModal(false);
+        fetchCategories();
+      }
+    } catch (error) {
+      console.error("Error updating category:", error);
+      toast.error(error.response.data || "Failed to update category");
+    } finally {
+      console.log("Category updated: ", category);
+      setOpenEditCategoryModal(false);
+      fetchCategories();
     }
-    finally{
-        console.log("Category added: ", categorey);
+  }
+
+  const handleAddCategory = async (category) => {
+    const { name, type, icon } = category;
+    if (!name || !type) {
+      toast.error("Please fill all the fields");
+      return;
+    }
+    try {
+      const response = await axiosConfig.post(
+        `${API_ENDPOINTS.CATEGORY}/save`,
+        {
+          name,
+          type,
+          icon,
+        }
+      );
+      if (response.status === 201) {
+        toast.success("Category added sucessfully");
         setOpenAddCategoryModal(false);
         fetchCategories();
+      }
+    } catch (error) {
+      console.error("Error adding category:", error);
+      toast.error(error.response.data || "Failed to add category");
+    } finally {
+      console.log("Category added: ", categorey);
+      setOpenAddCategoryModal(false);
+      fetchCategories();
     }
 
-
+  
   };
 
   return (
@@ -102,21 +131,39 @@ const Category = () => {
 
           {/* Category list */}
 
-          <CategoryList className="bg-white" categories={categories} />
+          <CategoryList
+            className="bg-white"
+            categories={categories}
+            onEditCategory={handleEditCategory}
+          />
 
           {/* Adding category modal */}
 
-          <Model title={"Add Category"} 
-          isOpen={openAddCategoryModal} 
-          onClose={()=>setOpenAddCategoryModal(false)}
+          <Model
+            title={"Add Category"}
+            isOpen={openAddCategoryModal}
+            onClose={() => setOpenAddCategoryModal(false)}
           >
-            <AddCategoryForm 
-             onAddCategory={handleAddCategory}
-            />
-
+            <AddCategoryForm onAddCategory={handleAddCategory} />
           </Model>
 
           {/* Updating category modal */}
+
+          <Model
+            title={"Update Category"}
+            isOpen={openEditCategoryModal}
+            onClose={() => {
+              setOpenEditCategoryModal(false);
+              setSelectedCategory(null);
+            }}
+          >
+            <AddCategoryForm
+              category={selectedCategory}
+              isEditing={true}
+              initialCategoryData={selectedCategory}
+              onAddCategory={handleUpdateCategory}
+            />
+          </Model>
         </div>
       </div>
     </Dashboard>
