@@ -5,8 +5,9 @@ import { API_ENDPOINTS } from "../util/apiEndpoints";
 import axiosConfig from "../util/axiosConfig";
 import IncomeList from "../components/IncomeList";
 import Model from "../components/Model";
-import { icons, Plus } from "lucide-react";
+import { Delete, icons, Plus } from "lucide-react";
 import AddIncomeForm from "../components/AddIncomeForm";
+import DeleteAlert from "../components/DeleteAlert";
 import toast from "react-hot-toast";
 
 const Income = () => {
@@ -107,6 +108,24 @@ const Income = () => {
     }
   };
 
+  const handleDeleteIncome = async (id) => {
+
+    setLoading(true);
+    try {
+      const response = await axiosConfig.delete(`${API_ENDPOINTS.INCOME}/${id}`);
+      if (response.status === 204) {
+        toast.success("Income deleted successfully");
+        fetchIncomeData();
+      }
+    } catch (error) {
+      console.error("Error deleting income:", error);
+      toast.error("Failed to delete income");
+    } finally {
+      setLoading(false);
+      setOpenDeleteModal({ show: false, data: null });
+    }
+  }
+
   return (
     <Dashboard activeMenu="Income">
       <div className="my-5 mx-auto">
@@ -136,6 +155,17 @@ const Income = () => {
               onAddIncome={(incomeData) => handleAddIncome(incomeData)}
               categories={categoryData}
             />
+          </Model>
+
+          <Model
+            isOpen={openDeleteModal.show}
+            onClose={() => setOpenDeleteModal({ show: false, data: null })}
+            title="Delete Income Transaction">
+              <DeleteAlert
+                content="Are you sure you want to delete this income transaction?"
+                onDelete={() => handleDeleteIncome(openDeleteModal.data)}
+                onClose={() => setOpenDeleteModal({ show: false, data: null })}
+              />
           </Model>
         </div>
       </div>
