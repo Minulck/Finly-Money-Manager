@@ -1,6 +1,7 @@
 package com.Minul.finly_backend.control;
 
 
+import com.Minul.finly_backend.dto.CategoryDTO;
 import com.Minul.finly_backend.dto.IncomeDTO;
 import com.Minul.finly_backend.service.IncomeService;
 import lombok.RequiredArgsConstructor;
@@ -44,5 +45,19 @@ public class IncomeController {
     public ResponseEntity<BigDecimal> getTotalIncomesForCurrentUser() {
         BigDecimal total = incomeService.getTotalIncomesForCurrentUser();
         return ResponseEntity.ok(total);
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity <?> updateCategory(@PathVariable Long id , @RequestBody IncomeDTO incomeDTO) {
+        try{
+            IncomeDTO updatedIncome = incomeService.updateincomeForCurrentUser(id, incomeDTO);
+            if (updatedIncome == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            return ResponseEntity.status(HttpStatus.CREATED).body(updatedIncome);
+        }            catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                    "Category with this name already exists "
+            );
+        }
     }
 }

@@ -3,7 +3,7 @@ import TransactionInfo from "./TransactionInfo";
 import moment from "moment";
 
 
-const IncomeList=({transactions,onDelete})=>{
+const IncomeList=({transactions,onDelete,onEdit})=>{
 
     return(
         <div className="bg-white p-4 rounded-lg shadow-md">
@@ -28,6 +28,7 @@ const IncomeList=({transactions,onDelete})=>{
                         amount={transaction.amount}
                         icon={transaction.icon}
                         onDelete={() => onDelete(transaction.id)}
+                        onEdit={()=>onEdit(transaction)}
                     />
                 ))}
             </div>

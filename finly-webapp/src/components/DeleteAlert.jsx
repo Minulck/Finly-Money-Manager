@@ -1,7 +1,7 @@
 
 const DeleteAlert = ({ content,onDelete, onClose }) => {
   return (
-   <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+   <div >
     <p className="text-gray-700 text-lg mb-6 text-center">{content}</p>
     <div className="flex justify-end space-x-4">
          <button 

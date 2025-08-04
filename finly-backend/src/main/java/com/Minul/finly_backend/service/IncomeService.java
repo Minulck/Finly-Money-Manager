@@ -1,6 +1,7 @@
 package com.Minul.finly_backend.service;
 
 
+import com.Minul.finly_backend.dto.CategoryDTO;
 import com.Minul.finly_backend.dto.IncomeDTO;
 import com.Minul.finly_backend.entity.CategoryEntity;
 import com.Minul.finly_backend.entity.IncomeEntity;
@@ -8,7 +9,9 @@ import com.Minul.finly_backend.entity.ProfileEntity;
 import com.Minul.finly_backend.repository.CategoryRepository;
 import com.Minul.finly_backend.repository.IncomeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -79,6 +82,21 @@ public class IncomeService {
         return expenses.stream()
                 .map(this::toDTO)
                 .toList();
+    }
+
+    public IncomeDTO updateincomeForCurrentUser(long incomeId, IncomeDTO incomeDTO){
+        ProfileEntity profile = profileService.getCurrentProfile();
+        IncomeEntity income =  incomeRepository.findByIdAndProfileId(incomeId, profile.getId())
+                .orElseThrow(() -> new RuntimeException("Category not found for the current user"));
+
+        income.setName(incomeDTO.getName());
+        income.setIcon(incomeDTO.getIcon());
+        income.setAmount(incomeDTO.getAmount());
+        income.setDate(incomeDTO.getDate());
+        CategoryEntity category = categoryRepository.findById(incomeDTO.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("Category not found with id: " + incomeDTO.getCategoryId()));
+        IncomeEntity updatedIncome   = incomeRepository.save(income);
+        return toDTO(updatedIncome);
     }
 
     private IncomeEntity toEntity(IncomeDTO incomeDTO, CategoryEntity category, ProfileEntity profile) {

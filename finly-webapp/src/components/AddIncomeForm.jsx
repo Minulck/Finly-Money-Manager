@@ -3,7 +3,7 @@ import Input from "./Input";
 import EmojiPickerPopup from "./EmojiPickerPopup";
 
 
-const AddIncomeForm = ({ onAddIncome, categories }) => {
+const AddIncomeForm = ({ onAddIncome, categories, isEditing, initialIncomeData }) => {
   const [income, setIncome] = useState({
     name: "",
     amount: "",
@@ -13,10 +13,18 @@ const AddIncomeForm = ({ onAddIncome, categories }) => {
   });
 
   useEffect(() => {
-    if (categories.length > 0 && !income.categoryId) {
-      setIncome(prev => ({ ...prev, categoryId: categories[0].id }));
+    // Set initial data when editing
+    if (isEditing && initialIncomeData) {
+      setIncome({
+        id: initialIncomeData.id,
+        name: initialIncomeData.name,
+        amount: initialIncomeData.amount,
+        date: initialIncomeData.date,
+        categoryId: initialIncomeData.categoryId,
+        icon: initialIncomeData.icon,
+      });
     }
-  }, [categories]);
+  }, [isEditing, initialIncomeData]);
 
   const categoryOptions = categories.map((category) => {
     return {
@@ -68,7 +76,7 @@ const AddIncomeForm = ({ onAddIncome, categories }) => {
           onClick={() => onAddIncome(income)}
           className="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-500 transition-colors"
         >
-          Save Income
+          {isEditing ? 'Update Income' : 'Save Income'}
         </button>
       </div>
     </div>

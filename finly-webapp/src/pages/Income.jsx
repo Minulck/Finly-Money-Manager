@@ -9,13 +9,15 @@ import { Delete, icons, Plus } from "lucide-react";
 import AddIncomeForm from "../components/AddIncomeForm";
 import DeleteAlert from "../components/DeleteAlert";
 import toast from "react-hot-toast";
+import IncomeOverview from "../components/IncomeOverview";
 
 const Income = () => {
   const [incomeData, setIncomeData] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const [openEditIncomeModal, setOpenEditIncomeModal] = useState(false);
   const [openIncomeModal, setOpenIncomeModal] = useState(false);
+  const [selectedIncome, setSelectedIncome] = useState(null);
   const [openDeleteModal, setOpenDeleteModal] = useState({
     show: false,
     data: null,
@@ -108,11 +110,62 @@ const Income = () => {
     }
   };
 
-  const handleDeleteIncome = async (id) => {
+  const handleEditIncome = async (incomeData) => {
+    setLoading(true);
+    setSelectedIncome(incomeData);
+    const { id, name, amount, date, categoryId, icon } = incomeData;
+    if (!name || !amount || !date || !categoryId) {
+      toast.error("Please fill all fields");
+      setLoading(false);
+      return;
+    }
+    if (Number(amount) <= 0) {
+      toast.error("Amount should be greater than 0");
+      setLoading(false);
+      return;
+    }
+    const today = new Date().toISOString().split("T")[0];
+    if (today < date) {
+      toast.error("Date cannot be in the future");
+      setLoading(false);
+      return;
+    }
 
+    try {
+      console.log("Adding income with data:", {
+        name,
+        amount,
+        date,
+        categoryId,
+        icon,
+      });
+      const response = await axiosConfig.put(`${API_ENDPOINTS.INCOME}/${id}`, {
+        name,
+        amount,
+        date,
+        categoryId,
+        icon,
+      });
+      if (response.status === 201) {
+        toast.success("Income Updated successfully");
+      }
+    } catch (error) {
+      console.error("Error adding income:", error);
+      toast.error("Failed to add income");
+    } finally {
+      setLoading(false);
+      setOpenEditIncomeModal(false);
+      fetchIncomeData();
+      setSelectedIncome(null);
+    }
+  };
+
+  const handleDeleteIncome = async (id) => {
     setLoading(true);
     try {
-      const response = await axiosConfig.delete(`${API_ENDPOINTS.INCOME}/${id}`);
+      const response = await axiosConfig.delete(
+        `${API_ENDPOINTS.INCOME}/${id}`
+      );
       if (response.status === 204) {
         toast.success("Income deleted successfully");
         fetchIncomeData();
@@ -124,7 +177,7 @@ const Income = () => {
       setLoading(false);
       setOpenDeleteModal({ show: false, data: null });
     }
-  }
+  };
 
   return (
     <Dashboard activeMenu="Income">
@@ -138,11 +191,17 @@ const Income = () => {
               <Plus size={16} />
               Add Income
             </button>
+            <IncomeOverview />
           </div>
           <IncomeList
             transactions={incomeData}
             onDelete={(id) => {
               setOpenDeleteModal({ show: true, data: id });
+            }}
+            onEdit={(transaction) => {
+              setOpenEditIncomeModal(true);
+              setOpenIncomeModal(false);
+              setSelectedIncome(transaction); // Fixed: using correct setState
             }}
           />
 
@@ -158,14 +217,31 @@ const Income = () => {
           </Model>
 
           <Model
+            isOpen={openEditIncomeModal}
+            onClose={() => {
+              setOpenEditIncomeModal(false);
+              setSelectedIncome(null);
+            }}
+            title="Edit Income Transaction"
+          >
+            <AddIncomeForm
+              onAddIncome={handleEditIncome}
+              categories={categoryData} // Pass all categories
+              initialIncomeData={selectedIncome} // Pass selected income for editing
+              isEditing={true}
+            />
+          </Model>
+
+          <Model
             isOpen={openDeleteModal.show}
             onClose={() => setOpenDeleteModal({ show: false, data: null })}
-            title="Delete Income Transaction">
-              <DeleteAlert
-                content="Are you sure you want to delete this income transaction?"
-                onDelete={() => handleDeleteIncome(openDeleteModal.data)}
-                onClose={() => setOpenDeleteModal({ show: false, data: null })}
-              />
+            title="Delete Income Transaction"
+          >
+            <DeleteAlert
+              content="Are you sure you want to delete this income transaction?"
+              onDelete={() => handleDeleteIncome(openDeleteModal.data)}
+              onClose={() => setOpenDeleteModal({ show: false, data: null })}
+            />
           </Model>
         </div>
       </div>

@@ -1,7 +1,7 @@
-import { Trash, Trash2, TrendingUp, UtensilsCrossed } from "lucide-react";
+import { Trash, Trash2, TrendingUp, BanknoteArrowUp,Pencil } from "lucide-react";
 
-const TransactionInfo = ({ icon,title,date,amount,type,hideDeletebtn,onDelete}) => {
-    
+const TransactionInfo = ({ icon,title,date,amount,type,hideDeletebtn,onDelete,onEdit }) => {
+
     const getAmountStyle = () => {
         return type === 'income' ? 'text-green-700 bg-emerald-100' : 'text-red-700 bg-red-100';
     };
@@ -12,7 +12,7 @@ const TransactionInfo = ({ icon,title,date,amount,type,hideDeletebtn,onDelete}) 
                 {icon ? (
                     <img src={icon} alt={title} className="w-8 h-8" />
                 ) : (
-                    <UtensilsCrossed className="w-8 h-8 text-emerald-00" />
+                    <BanknoteArrowUp className="w-8 h-8 text-emerald-00" />
                 )}
             </div>
             <div className="flex-1 flex flex-items-center justify-between">
@@ -22,9 +22,16 @@ const TransactionInfo = ({ icon,title,date,amount,type,hideDeletebtn,onDelete}) 
                 </div>
                 <div className="flex items-center gap-2">
                     {!hideDeletebtn && (
+                        
+                        <div className=" flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button className="text-gray-400 hover:text-emerald-800 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer" onClick={onEdit}>
+                           <Pencil size={18}/>
+                        </button>
                         <button className="text-gray-400 hover:text-red-800 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer" onClick={onDelete}>
                            <Trash2 size={18}/>
                         </button>
+                        </div>
+
                     )}
                     <div className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-lg font-semibold ${getAmountStyle()}`}>
                         <h6 className="text-xs font-medium">
