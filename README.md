@@ -208,7 +208,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Contact
 
 Minul - [GitHub Profile](https://github.com/Minulck)
-Email - [Peronal Email][minulck@gmail.com]
+Email - [Email_Me](minulck@gmail.com)
 Project Link: [https://github.com/Minulck/Finly-Money-Manager](https://github.com/Minulck/Finly-Money-Manager)
 
 ---
