@@ -72,11 +72,14 @@ public class CategoryService {
     public CategoryDTO updateCategoryForCurrentUser(long categoryId,CategoryDTO categoryDTO){
         ProfileEntity profile = profileService.getCurrentProfile();
 
-        if(categoryRepository.existsByNameAndProfileId(categoryDTO.getName(), profile.getId())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT,"Category with this name already exists for the current user.");
-        }
         CategoryEntity category =  categoryRepository.findByIdAndProfileId(categoryId, profile.getId())
                 .orElseThrow(() -> new RuntimeException("Category not found for the current user"));
+
+        if(category.getName().equals(categoryDTO.getName()) &&
+           category.getIcon().equals(categoryDTO.getIcon()) &&
+           category.getType().equals(categoryDTO.getType())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,"Category with this name already exists for the current user.");
+        }
 
         category.setName(categoryDTO.getName());
         category.setIcon(categoryDTO.getIcon());
