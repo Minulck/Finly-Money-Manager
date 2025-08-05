@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Dashboard from "../components/Dashboard";
 import { useUser } from "../hooks/useUserHook";
 import { Plus } from "lucide-react";
@@ -8,9 +8,12 @@ import { API_ENDPOINTS } from "../util/apiEndpoints";
 import axiosConfig from "../util/axiosConfig";
 import toast from "react-hot-toast";
 import Model from "../components/Model";
+import DeleteAlert from "../components/DeleteAlert";
 import AddCategoryForm from "../components/AddCategoryForm";
+import { AppContext } from "../context/AppContext";
 
 const Category = () => {
+  const { triggerRefresh } = useContext(AppContext);
   useUser();
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState(null);
@@ -18,6 +21,10 @@ const Category = () => {
   const [openAddCategoryModal, setOpenAddCategoryModal] = useState(false);
   const [openEditCategoryModal, setOpenEditCategoryModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [openDeleteModal, setOpenDeleteModal] = useState({
+    show: false,
+    data: null,
+  });
 
   const fetchCategories = async () => {
     if (loading) {
@@ -51,8 +58,8 @@ const Category = () => {
     setOpenEditCategoryModal(true);
   };
 
-  const handleUpdateCategory = async(category) => {
-        const { name, type, icon } = category;
+  const handleUpdateCategory = async (category) => {
+    const { name, type, icon } = category;
     if (!name || !type) {
       toast.error("Please fill all the fields");
       return;
@@ -71,7 +78,7 @@ const Category = () => {
         toast.success("Category updated sucessfully");
         setOpenEditCategoryModal(false);
         fetchCategories();
-        selectedCategory(null);
+        setSelectedCategory(null);
       }
     } catch (error) {
       console.error("Error updating category:", error.response.data);
@@ -82,7 +89,7 @@ const Category = () => {
       fetchCategories();
       setSelectedCategory(null);
     }
-  }
+  };
 
   const handleAddCategory = async (category) => {
     const { name, type, icon } = category;
@@ -108,12 +115,30 @@ const Category = () => {
       console.error("Error adding category:", error);
       toast.error(error.response.data || "Failed to add category");
     } finally {
-      console.log("Category added: ", categorey);
+      console.log("Category added: ", category);
       setOpenAddCategoryModal(false);
       fetchCategories();
     }
+  };
 
-  
+    const handleDeleteCategory = async (id) => {
+    setLoading(true);
+    try {
+      const response = await axiosConfig.delete(
+        `${API_ENDPOINTS.CATEGORY}/${id}`
+      );
+      if (response.status === 204) {
+        toast.success("Category deleted successfully");
+        fetchCategories();
+      }
+    } catch (error) {
+      console.error("Error deleting category:", error);
+      toast.error("Failed to delete category");
+    } finally {
+      setLoading(false);
+      setOpenDeleteModal({ show: false, data: null });
+      triggerRefresh();
+    }
   };
 
   return (
@@ -138,6 +163,9 @@ const Category = () => {
             className="bg-white"
             categories={categories}
             onEditCategory={handleEditCategory}
+            onDelete={(id) => {
+              setOpenDeleteModal({ show: true, data: id });
+            }}
           />
 
           {/* Adding category modal */}
@@ -147,9 +175,9 @@ const Category = () => {
             isOpen={openAddCategoryModal}
             onClose={() => setOpenAddCategoryModal(false)}
           >
-            <AddCategoryForm 
+            <AddCategoryForm
               onAddCategory={handleAddCategory}
-              loading={loading} 
+              loading={loading}
             />
           </Model>
 
@@ -168,6 +196,19 @@ const Category = () => {
               isEditing={true}
               initialCategoryData={selectedCategory}
               onAddCategory={handleUpdateCategory}
+              loading={loading}
+            />
+          </Model>
+
+          <Model
+            isOpen={openDeleteModal.show}
+            onClose={() => setOpenDeleteModal({ show: false, data: null })}
+            title="Delete Category"
+          >
+            <DeleteAlert
+              content="Are you sure you want to delete this Category?"
+              onDelete={() => handleDeleteCategory(openDeleteModal.data)}
+              onClose={() => setOpenDeleteModal({ show: false, data: null })}
               loading={loading}
             />
           </Model>

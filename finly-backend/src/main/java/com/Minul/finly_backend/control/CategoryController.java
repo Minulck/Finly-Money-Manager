@@ -61,5 +61,15 @@ public class CategoryController {
             );
         }
     }
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteCategoryById(@PathVariable Long id) {
+        try {
+            categoryService.deleteCategoryForCurrentUser(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    "Category not found with id: " + id
+            );
+        }
+    }
 }

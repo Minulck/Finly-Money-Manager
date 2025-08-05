@@ -69,6 +69,14 @@ public class CategoryService {
                 .toList();
     }
 
+    public void deleteCategoryForCurrentUser(long categoryId) {
+        ProfileEntity profile = profileService.getCurrentProfile();
+        CategoryEntity category = categoryRepository.findByIdAndProfileId(categoryId, profile.getId())
+                .orElseThrow(() -> new RuntimeException("Category not found for the current user"));
+
+        categoryRepository.delete(category);
+    }
+
     public CategoryDTO updateCategoryForCurrentUser(long categoryId,CategoryDTO categoryDTO){
         ProfileEntity profile = profileService.getCurrentProfile();
 
