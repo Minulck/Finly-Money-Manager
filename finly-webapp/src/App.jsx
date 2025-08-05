@@ -7,6 +7,7 @@ import Income from "./pages/Income.jsx";
 import Expense from "./pages/Expense.jsx";
 import Category from "./pages/Category.jsx";
 import Filter from "./pages/Filter.jsx";
+import Settings from "./pages/Settings.jsx";
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
           <Route path="/expense" element={<Expense />} />
           <Route path="/category" element={<Category />} />
           <Route path="/filter" element={<Filter />} />
+          <Route path="/settings" element={<Settings />} />
         </Routes>
       </BrowserRouter>
     </>
