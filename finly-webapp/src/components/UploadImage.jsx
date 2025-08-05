@@ -1,10 +1,17 @@
 import { Upload, User,Trash } from "lucide-react";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 
-const UploadImage = ({ image, setImage }) => {
+const UploadImage = ({ image, setImage, currentImage }) => {
   const inputRef = useRef(null);
   const [previewImage, setPreviewImage] = useState(null);
+
+  // Initialize preview with current image if available
+  useEffect(() => {
+    if (currentImage && !image) {
+      setPreviewImage(currentImage);
+    }
+  }, [currentImage, image]);
 
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
@@ -17,7 +24,7 @@ const UploadImage = ({ image, setImage }) => {
 
   const handleRemoveImage = () => {
     setImage(null);
-    setPreviewImage(null);
+    setPreviewImage(currentImage || null);
   };
 
   const onChooseFile = () => {
@@ -50,10 +57,19 @@ const UploadImage = ({ image, setImage }) => {
         <div className="relative">
             <img src={previewImage} alt="profile photo" className="w-22 h-22 rounded-full object-cover" />
             <button
-                className="w-8 h-8 flex items-center justify-center rounded-full bg-red-500 text-white absolute -bottom-1 -right-1"
-                onClick={handleRemoveImage}>
-                <Trash/>
+                type="button"
+                className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-emerald-600 absolute -bottom-1 -right-1 hover:bg-gray-200"
+                onClick={onChooseFile}>
+                <Upload size={15}/>
             </button>
+            {image && (
+              <button
+                  type="button"
+                  className="w-8 h-8 flex items-center justify-center rounded-full bg-red-500 text-white absolute -top-1 -right-1 hover:bg-red-600"
+                  onClick={handleRemoveImage}>
+                  <Trash size={15}/>
+              </button>
+            )}
         </div>
       )}
     </div>

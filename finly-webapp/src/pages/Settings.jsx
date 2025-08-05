@@ -77,7 +77,9 @@ const Settings = () => {
                 profileImage: profileImageUrl
             });
 
-            if (response.status === 201) {
+            console.log("Profile update response:", response);
+
+            if (response.status === 200) {
                 // Update user context with new data
                 setUser({
                     ...user,
@@ -128,7 +130,7 @@ const Settings = () => {
                 currentPassword: currentPassword
             });
 
-            if (response.status === 201) {
+            if (response.status === 200) {
                 setCurrentPassword("");
                 setNewPassword("");
                 setConfirmPassword("");
@@ -167,15 +169,11 @@ const Settings = () => {
                             {/* Profile Image Section */}
                             <div className="flex flex-col items-center space-y-4">
                                 <div className="relative">
-                                    {currentProfileImage && !profilePic ? (
-                                        <img
-                                            src={currentProfileImage}
-                                            alt="Current Profile"
-                                            className="w-24 h-24 rounded-full object-cover border-4 border-emerald-100"
-                                        />
-                                    ) : (
-                                        <UploadImage image={profilePic} setImage={setProfilePic} />
-                                    )}
+                                    <UploadImage 
+                                        image={profilePic} 
+                                        setImage={setProfilePic}
+                                        currentImage={currentProfileImage}
+                                    />
                                 </div>
                                 <div className="flex items-center gap-2 text-sm text-gray-600">
                                     <Camera size={16} />
@@ -272,18 +270,6 @@ const Settings = () => {
                                 {passwordLoading ? "Updating..." : "Update Password"}
                             </button>
                         </form>
-                    </div>
-                </div>
-
-                {/* Account Information */}
-                <div className="block m-auto w-sm bg-white rounded-lg p-6 mt-8">
-                    <div className="flex items-center gap-3 mb-4">
-                        <Mail className="text-gray-600" size={20} />
-                        <h3 className="text-lg font-medium text-gray-900">Account Information</h3>
-                    </div>
-                    <div className="text-sm text-gray-600 space-y-2">
-                        <p><strong>Account Created:</strong> {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</p>
-                        <p><strong>Last Updated:</strong> {user?.updatedAt ? new Date(user.updatedAt).toLocaleDateString() : 'N/A'}</p>
                     </div>
                 </div>
             </div>
