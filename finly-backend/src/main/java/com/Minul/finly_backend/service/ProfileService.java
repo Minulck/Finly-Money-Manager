@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -78,6 +79,40 @@ public class ProfileService {
                 .createdAt(profileEntity.getCreatedAt())
                 .updatedAt(profileEntity.getUpdatedAt())
                 .build();
+    }
+
+    public ProfileDTO updateProfile(ProfileDTO profileDTO) {
+        ProfileEntity currentProfile = getCurrentProfile();
+
+        currentProfile.setFullName(profileDTO.getFullName());
+        currentProfile.setProfileImage(profileDTO.getProfileImage());
+
+        ProfileEntity updatedProfile = profileRepository.save(currentProfile);
+
+        return toDTO(updatedProfile);
+    }
+
+    public void updatePassword(String newPassword, String currentPassword) {
+        if (newPassword == null || newPassword.isEmpty()) {
+            throw new IllegalArgumentException("New password cannot be null or empty");
+        }
+        try {
+            ProfileEntity currentProfile = getCurrentProfile();
+
+            log.info("Current password: {}", currentPassword);
+            log.info("New password: {}", newPassword);
+            log.info("Current profile password: {}", currentProfile.getPassword());
+
+            if (!passwordEncoder.matches(currentPassword, currentProfile.getPassword())) {
+                throw new RuntimeException("Current password is incorrect");
+            }
+
+
+            currentProfile.setPassword(passwordEncoder.encode(newPassword));
+            profileRepository.save(currentProfile);
+        }catch (Exception e) {
+            throw new RuntimeException("Current password is incorrect");
+        }
     }
 
     public boolean activateProfile(String activationToken){

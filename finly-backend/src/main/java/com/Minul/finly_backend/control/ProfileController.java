@@ -2,9 +2,11 @@ package com.Minul.finly_backend.control;
 
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
 
 import com.Minul.finly_backend.dto.AuthDTO;
 import com.Minul.finly_backend.dto.ProfileDTO;
@@ -12,6 +14,7 @@ import com.Minul.finly_backend.service.ProfileService;
 
 import lombok.RequiredArgsConstructor;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class ProfileController {
@@ -63,4 +66,26 @@ public class ProfileController {
         return ResponseEntity.ok(profile);
     }
 
+    @PutMapping("/profile")
+    public ResponseEntity<ProfileDTO> updateProfile(@RequestBody ProfileDTO profileDTO) {
+        ProfileDTO updatedProfile = profileService.updateProfile(profileDTO);
+        if (updatedProfile == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(updatedProfile);
+    }
+
+    @PutMapping("/profile/password")
+    public ResponseEntity<?> updatePassword(@RequestBody Map<String, String> passwordData) {
+        log.info("Updating password for user: {}", passwordData.get("currentPassword"));
+        log.info("New password: {}", passwordData.get("newPassword"));
+        try {
+            String newPassword = passwordData.get("newPassword");
+            String currentPassword = passwordData.get("currentPassword");
+            profileService.updatePassword(newPassword, currentPassword);
+            return ResponseEntity.status(HttpStatus.OK).body("Password updated successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password update failed. " + e.getMessage());
+        }
+    }
 }

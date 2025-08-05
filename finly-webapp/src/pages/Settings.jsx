@@ -7,6 +7,7 @@ import { ValidateEmail, ValidatePassword } from "../util/validation";
 import axiosConfig from "../util/axiosConfig";
 import { API_ENDPOINTS } from "../util/apiEndpoints";
 import uploadProfileImage from "../util/uploadProfile";
+import { useUser } from "../hooks/useUserHook";
 import toast from "react-hot-toast";
 import { LoaderCircle, Save, User, Mail, Lock, Camera } from "lucide-react";
 
@@ -30,6 +31,10 @@ const Settings = () => {
     // Form errors
     const [profileError, setProfileError] = useState("");
     const [passwordError, setPasswordError] = useState("");
+
+    
+      useUser();
+    
 
     // Initialize form with user data
     useEffect(() => {
@@ -72,7 +77,7 @@ const Settings = () => {
                 profileImage: profileImageUrl
             });
 
-            if (response.status === 200) {
+            if (response.status === 201) {
                 // Update user context with new data
                 setUser({
                     ...user,
@@ -118,12 +123,12 @@ const Settings = () => {
         }
 
         try {
-            const response = await axiosConfig.put(`${API_ENDPOINTS.GET_USER_INFO}/password`, {
-                currentPassword,
-                newPassword
+            const response = await axiosConfig.put(`${API_ENDPOINTS.UPDATE_PASSWORD}`, {
+                newPassword: newPassword,
+                currentPassword: currentPassword
             });
 
-            if (response.status === 200) {
+            if (response.status === 201) {
                 setCurrentPassword("");
                 setNewPassword("");
                 setConfirmPassword("");
@@ -131,7 +136,10 @@ const Settings = () => {
             }
         } catch (error) {
             console.error("Error updating password:", error);
-            setPasswordError(error.response?.data?.message || "Failed to update password. Please check your current password and try again.");
+            console.error("Error response data:", error.response?.data);
+            console.error("Error response status:", error.response?.status);
+            console.error("Error response headers:", error.response?.headers);
+            setPasswordError(error.response?.data?.message || error.response?.data || "Failed to update password. Please check your current password and try again.");
             toast.error("Failed to update password");
         } finally {
             setPasswordLoading(false);
@@ -140,80 +148,80 @@ const Settings = () => {
 
     return (
         <Dashboard>
-            <div className="max-w-4xl mx-auto p-6 space-y-8">
+            <div className=" mx-auto p-6">
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">Settings</h1>
                     <p className="text-gray-600">Manage your account preferences and security settings</p>
                 </div>
 
-                {/* Profile Settings Section */}
-                <div className="bg-white rounded-lg shadow-md p-6">
-                    <div className="flex items-center gap-3 mb-6">
-                        <User className="text-emerald-600" size={24} />
-                        <h2 className="text-xl font-semibold text-gray-900">Profile Information</h2>
+                {/* Profile Settings and Password Grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    {/* Profile Settings Section - Left Side */}
+                    <div className="bg-white rounded-lg shadow-md p-6">
+                        <div className="flex items-center gap-3 mb-6">
+                            <User className="text-emerald-600" size={24} />
+                            <h2 className="text-xl font-semibold text-gray-900">Profile Information</h2>
+                        </div>
+
+                        <form onSubmit={handleProfileUpdate} className="space-y-6">
+                            {/* Profile Image Section */}
+                            <div className="flex flex-col items-center space-y-4">
+                                <div className="relative">
+                                    {currentProfileImage && !profilePic ? (
+                                        <img
+                                            src={currentProfileImage}
+                                            alt="Current Profile"
+                                            className="w-24 h-24 rounded-full object-cover border-4 border-emerald-100"
+                                        />
+                                    ) : (
+                                        <UploadImage image={profilePic} setImage={setProfilePic} />
+                                    )}
+                                </div>
+                                <div className="flex items-center gap-2 text-sm text-gray-600">
+                                    <Camera size={16} />
+                                    <span>Click to update your profile picture</span>
+                                </div>
+                            </div>
+
+                            <div className="space-y-4">
+                                <Input
+                                    label="Full Name"
+                                    value={fullName}
+                                    onChange={(e) => setFullName(e.target.value)}
+                                    placeholder="Enter your full name"
+                                    type="text"
+                                />
+                                <Input
+                                    label="Email Address"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    placeholder="Enter your email"
+                                    type="email"
+                                />
+                            </div>
+
+                            {profileError && (
+                                <div className="text-red-500 text-sm bg-red-50 p-3 rounded-md">
+                                    {profileError}
+                                </div>
+                            )}
+
+                            <button
+                                type="submit"
+                                disabled={profileLoading}
+                                className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                {profileLoading ? (
+                                    <LoaderCircle className="animate-spin" size={18} />
+                                ) : (
+                                    <Save size={18} />
+                                )}
+                                {profileLoading ? "Updating..." : "Update Profile"}
+                            </button>
+                        </form>
                     </div>
 
-                    <form onSubmit={handleProfileUpdate} className="space-y-6">
-                        {/* Profile Image Section */}
-                        <div className="flex flex-col items-center space-y-4">
-                            <div className="relative">
-                                {currentProfileImage && !profilePic ? (
-                                    <img
-                                        src={currentProfileImage}
-                                        alt="Current Profile"
-                                        className="w-24 h-24 rounded-full object-cover border-4 border-emerald-100"
-                                    />
-                                ) : (
-                                    <UploadImage image={profilePic} setImage={setProfilePic} />
-                                )}
-                            </div>
-                            <div className="flex items-center gap-2 text-sm text-gray-600">
-                                <Camera size={16} />
-                                <span>Click to update your profile picture</span>
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <Input
-                                label="Full Name"
-                                value={fullName}
-                                onChange={(e) => setFullName(e.target.value)}
-                                placeholder="Enter your full name"
-                                type="text"
-                            />
-                            <Input
-                                label="Email Address"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                placeholder="Enter your email"
-                                type="email"
-                            />
-                        </div>
-
-                        {profileError && (
-                            <div className="text-red-500 text-sm bg-red-50 p-3 rounded-md">
-                                {profileError}
-                            </div>
-                        )}
-
-                        <button
-                            type="submit"
-                            disabled={profileLoading}
-                            className="block mx-auto flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            {profileLoading ? (
-                                <LoaderCircle className="animate-spin" size={18} />
-                            ) : (
-                                <Save size={18} />
-                            )}
-                            {profileLoading ? "Updating..." : "Update Profile"}
-                        </button>
-                    </form>
-                </div>
-
-                {/* Password and Account Information Grid */}
-                <div className=" gap-8 mb-8">
-                    {/* Password Settings Section */}
+                    {/* Password Settings Section - Right Side */}
                     <div className="bg-white rounded-lg shadow-md p-6">
                         <div className="flex items-center gap-3 mb-6">
                             <Lock className="text-emerald-600" size={24} />
@@ -254,7 +262,7 @@ const Settings = () => {
                             <button
                                 type="submit"
                                 disabled={passwordLoading}
-                                className="block mx-auto flex gap-2 px-6 py-3 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {passwordLoading ? (
                                     <LoaderCircle className="animate-spin" size={18} />
@@ -264,6 +272,18 @@ const Settings = () => {
                                 {passwordLoading ? "Updating..." : "Update Password"}
                             </button>
                         </form>
+                    </div>
+                </div>
+
+                {/* Account Information */}
+                <div className="block m-auto w-sm bg-white rounded-lg p-6 mt-8">
+                    <div className="flex items-center gap-3 mb-4">
+                        <Mail className="text-gray-600" size={20} />
+                        <h3 className="text-lg font-medium text-gray-900">Account Information</h3>
+                    </div>
+                    <div className="text-sm text-gray-600 space-y-2">
+                        <p><strong>Account Created:</strong> {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</p>
+                        <p><strong>Last Updated:</strong> {user?.updatedAt ? new Date(user.updatedAt).toLocaleDateString() : 'N/A'}</p>
                     </div>
                 </div>
             </div>
