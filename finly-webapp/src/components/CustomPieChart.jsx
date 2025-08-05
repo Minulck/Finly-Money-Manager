@@ -28,7 +28,7 @@ const CustomPieChart = ({ data, colors, totalAmount, showTextAbove }) => {
   ];
 
   return (
-    <div className="w-full h-[250px] relative">
+    <div className="w-full h-[250px] relative bg-white rounded-lg shadow-md">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
@@ -62,7 +62,7 @@ const CustomPieChart = ({ data, colors, totalAmount, showTextAbove }) => {
         </span>
       </div>
 
-      <div className="flex justify-center gap-6 mt-4">
+      <div className="flex justify-center gap-6 mt-4 bg-emerald-100/40 p-2 rounded shadow">
         {data.map((entry, index) => (
           <div key={`legend-${index}`} className="flex items-center gap-2">
             <div

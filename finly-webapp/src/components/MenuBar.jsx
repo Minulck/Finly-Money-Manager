@@ -62,8 +62,9 @@ const MenuBar = ({activeMenu}) => {
      <div className="relative" ref={dropDownRef}>
         <button 
         onClick={handleDropdown}
-        className="flex item-center justify-center w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-800 focus:ring-offset-2">
-            <User className="m-auto text-emerald-500" />
+        className="flex  item-center justify-center px-5 py-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors duration-200 focus:outline-none text-black focus:ring-2 focus:ring-emerald-800 focus:ring-offset-2">
+            <User className="m-auto text-emerald-500 mr-4  rounded-" size={30} />
+            <p className="flex items-center justify-center">{user.fullName}</p>
         </button>
         {showDropdown && (
           <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded shadow-xl z-50">
