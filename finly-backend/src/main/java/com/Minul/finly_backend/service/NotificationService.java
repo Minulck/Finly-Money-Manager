@@ -28,11 +28,12 @@ public class NotificationService {
     @Value("${frontend.url}")
     private String frontendUrl;
 
-    @Scheduled(cron = "0 0 20 * * *" , zone = "Asia/Colombo")
+    @Scheduled(cron = "0 0 19 * * *" , zone = "Asia/Colombo")
     public void sendDailyIncomeExpenseReminder(){
         log.info("Sending daily income and expense reminder email to all users");
         List<ProfileEntity> profiles = profileRepository.findAll();
         for(ProfileEntity profile : profiles){
+            log.info("Sending reminder to: {}", profile.getEmail());
             String body = """
                     <h1>Daily Income and Expense Reminder</h1>
                     <p>Dear %s,</p>
@@ -47,14 +48,16 @@ public class NotificationService {
                     body
             );
         }
+        log.info("Daily income and expense reminder email sent to all users");
     }
 
-    @Scheduled(cron = "0 0 23 * * *", zone = "Asia/Colombo")
+    @Scheduled(cron = "0 0 22 * * *", zone = "Asia/Colombo")
     public void sendDailyExpenseSummary() {
         log.info("Sending daily expense summary email to all users");
         List<ProfileEntity> profiles = profileRepository.findAll();
 
         for (ProfileEntity profile : profiles) {
+            log.info("Processing profile: {}", profile.getEmail());
             List<ExpenseDTO> todayExpenses = expenseService.getExpensesForUserOnDate(profile.getId(), LocalDate.now());
             if (!todayExpenses.isEmpty()) {
                 log.info("Preparing summary for: {}", profile.getEmail());
