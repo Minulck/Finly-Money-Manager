@@ -125,16 +125,19 @@ export const prepareBalanceChartData = (incomeData, expenseData, timePeriod = 'd
 
   // Get date range based on time period
   const now = new Date();
-  let startDate, endDate, dateKey;
+  let startDate, endDate;
 
   switch (timePeriod) {
     case 'weekly':
-      // Get current week (Monday to Sunday)
-      const currentDay = now.getDay();
-      const diff = now.getDate() - currentDay + (currentDay === 0 ? -6 : 1);
-      startDate = new Date(now.setDate(diff));
-      endDate = new Date(startDate);
-      endDate.setDate(startDate.getDate() + 6);
+      // Get the 4 weeks of the current month
+      const currentMonth = now.getMonth();
+      const currentYear = now.getFullYear();
+      
+      // Start from the first day of the current month
+      startDate = new Date(currentYear, currentMonth, 1);
+      
+      // End at the last day of the current month
+      endDate = new Date(currentYear, currentMonth + 1, 0);
       break;
     case 'monthly':
       // Get current year's months
@@ -151,14 +154,14 @@ export const prepareBalanceChartData = (incomeData, expenseData, timePeriod = 'd
 
   const balanceData = [];
   let runningBalance = 0;
-  const processedDates = new Set();
 
   if (timePeriod === 'monthly') {
     // Group by months
+    const currentYear = now.getFullYear();
     for (let month = 0; month < 12; month++) {
-      const monthStart = new Date(now.getFullYear(), month, 1);
-      const monthEnd = new Date(now.getFullYear(), month + 1, 0);
-      const monthKey = `${now.getFullYear()}-${String(month + 1).padStart(2, '0')}`;
+      const monthStart = new Date(currentYear, month, 1);
+      const monthEnd = new Date(currentYear, month + 1, 0);
+      const monthKey = `${currentYear}-${String(month + 1).padStart(2, '0')}`;
 
       let monthIncome = 0;
       let monthExpense = 0;
@@ -185,34 +188,49 @@ export const prepareBalanceChartData = (incomeData, expenseData, timePeriod = 'd
       balanceData.push({
         date: monthKey,
         amount: runningBalance,
+        income: monthIncome,
+        expense: monthExpense,
+        netChange: monthBalance,
         period: monthStart.toLocaleString('default', { month: 'short' })
       });
     }
   } else if (timePeriod === 'weekly') {
-    // Group by weeks
-    const currentDate = new Date(startDate);
+    // Group by weeks within the current month
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+    
+    // Start from the first day of the current month
+    const monthStart = new Date(currentYear, currentMonth, 1);
+    const monthEnd = new Date(currentYear, currentMonth + 1, 0);
+    
+    let currentWeekStart = new Date(monthStart);
     let weekNumber = 1;
 
-    while (currentDate <= endDate) {
-      const weekStart = new Date(currentDate);
-      const weekEnd = new Date(currentDate);
-      weekEnd.setDate(weekStart.getDate() + 6);
+    while (currentWeekStart <= monthEnd) {
+      // Calculate week end (6 days later or end of month, whichever comes first)
+      const currentWeekEnd = new Date(currentWeekStart);
+      currentWeekEnd.setDate(currentWeekStart.getDate() + 6);
+      
+      // Don't go beyond the current month
+      if (currentWeekEnd > monthEnd) {
+        currentWeekEnd.setTime(monthEnd.getTime());
+      }
 
       let weekIncome = 0;
       let weekExpense = 0;
 
       // Calculate income for this week
       for (const [date, amount] of incomeMap) {
-        const incomeDate = new Date(date);
-        if (incomeDate >= weekStart && incomeDate <= weekEnd) {
+        const transactionDate = new Date(date);
+        if (transactionDate >= currentWeekStart && transactionDate <= currentWeekEnd) {
           weekIncome += amount;
         }
       }
 
       // Calculate expense for this week
       for (const [date, amount] of expenseMap) {
-        const expenseDate = new Date(date);
-        if (expenseDate >= weekStart && expenseDate <= weekEnd) {
+        const transactionDate = new Date(date);
+        if (transactionDate >= currentWeekStart && transactionDate <= currentWeekEnd) {
           weekExpense += amount;
         }
       }
@@ -221,13 +239,21 @@ export const prepareBalanceChartData = (incomeData, expenseData, timePeriod = 'd
       runningBalance += weekBalance;
 
       balanceData.push({
-        date: weekStart.toISOString().split('T')[0],
+        date: currentWeekStart.toISOString().split('T')[0],
         amount: runningBalance,
-        period: `Week ${weekNumber}`
+        income: weekIncome,
+        expense: weekExpense,
+        netChange: weekBalance,
+        period: `Week ${weekNumber} (${currentWeekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${currentWeekEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })})`
       });
 
-      currentDate.setDate(currentDate.getDate() + 7);
+      // Move to next week (start of next week is day after current week end)
+      currentWeekStart = new Date(currentWeekEnd);
+      currentWeekStart.setDate(currentWeekEnd.getDate() + 1);
       weekNumber++;
+      
+      // Safety check to avoid infinite loop
+      if (weekNumber > 6) break;
     }
   } else {
     // Daily grouping
@@ -243,7 +269,10 @@ export const prepareBalanceChartData = (incomeData, expenseData, timePeriod = 'd
 
       balanceData.push({
         date: dateStr,
-        amount: runningBalance
+        amount: runningBalance,
+        income: dayIncome,
+        expense: dayExpense,
+        netChange: dayBalance
       });
 
       currentDate.setDate(currentDate.getDate() + 1);
