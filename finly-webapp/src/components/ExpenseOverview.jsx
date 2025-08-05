@@ -83,7 +83,7 @@ const ExpenseOverview = () => {
           </div>
         ) : (
           <div className="h-[300px] w-full">
-            <CustomLineChart data={chartData} />
+            <CustomLineChart data={chartData} isExpense={true} isIncome={false} />
           </div>
         )}
       </div>

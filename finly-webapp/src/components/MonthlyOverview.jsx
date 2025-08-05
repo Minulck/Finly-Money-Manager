@@ -150,7 +150,7 @@ const MonthlyOverview = () =>{
           </div>
         ) : (
           <div className="h-[300px] w-full">
-            <CustomLineChart data={chartData} />
+            <CustomLineChart data={chartData} isExpense={false} isIncome={false} />
           </div>
         )}
       </div>

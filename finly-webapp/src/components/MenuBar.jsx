@@ -1,9 +1,10 @@
 import React, { useEffect,useState, useRef, useContext } from "react";
 import { AppContext } from "../context/AppContext";
 import { Link } from "react-router-dom";
-import { LogOut, Menu, User, X } from "lucide-react";
+import { LogOut, Menu, Settings, User, X } from "lucide-react";
 import { assets } from "../assets/assets";
 import SideBar from "./SideBar";
+import { useNavigate } from "react-router-dom";
 
 const MenuBar = ({activeMenu}) => {
   const [openSideMenu, setOpenSideMenu] = useState(false);
@@ -14,6 +15,9 @@ const MenuBar = ({activeMenu}) => {
   const handleDropdown=()=>{
     setShowDropdown(!showDropdown);
   }
+
+  const navigator = useNavigate();
+  
   const handleLogout = () => {
     localStorage.clear();
     setShowDropdown(false);
@@ -77,6 +81,14 @@ const MenuBar = ({activeMenu}) => {
                         </p>
                     </div>
                 </div>
+            </div>
+             <div className="py-1">
+                <button 
+                onClick={()=>navigator("/settings")}
+                className="flex item-center gap-3 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150 cursor-pointer">
+                    <Settings className="w-4 h-4 text-gray-500"/>  
+                    <span>Settings</span>
+                </button>
             </div>
             <div className="py-1">
                 <button 

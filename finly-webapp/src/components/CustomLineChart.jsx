@@ -10,7 +10,7 @@ import {
   Area,
 } from 'recharts';
 
-const CustomLineChart = ({ data }) => {
+const CustomLineChart = ({ data,isIncome,isExpense }) => {
   const indigo = '#10b981'; // Emerald-500
   const indigoLight = '#d1fae5'; // Emerald-100
   const tooltipBackground = 'rgba(255, 255, 255, 0.95)';
@@ -126,7 +126,10 @@ const CustomLineChart = ({ data }) => {
                     {periodLabel}
                   </p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                   
+                    {!isIncome && !isExpense &&(
+                       <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <span style={{ 
                         color: '#10b981', 
                         fontSize: '13px',
@@ -197,7 +200,10 @@ const CustomLineChart = ({ data }) => {
                         {formatCurrency(data.netChange || 0)}
                       </span>
                     </div>
-                    
+                       </div>
+                    )}
+
+
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <span style={{ 
                         color: '#374151', 
@@ -214,7 +220,7 @@ const CustomLineChart = ({ data }) => {
                           borderRadius: '50%',
                           display: 'inline-block'
                         }}></span>
-                        Total Balance:
+                        {isIncome ? 'Income' : isExpense ? 'Expense' : 'Balance'}:
                       </span>
                       <span style={{ fontWeight: '700', color: '#374151', fontSize: '14px' }}>
                         {formatCurrency(data.amount || 0)}
