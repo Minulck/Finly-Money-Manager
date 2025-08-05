@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import RecentTransactions from "../components/RecentTransactions";
 import FinanceOverview from "../components/FinanceOverview";
+import MonthlyOverview from "../components/MonthlyOverview";
 
 const Home = () => {
   useUser();
@@ -59,6 +60,11 @@ const Home = () => {
               label="Total Expense"
               value={dashboardData?.totalExpense || 0}
               color="bg-red-500"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 mt-6">
+            <MonthlyOverview
             />
           </div>
 

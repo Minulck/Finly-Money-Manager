@@ -50,6 +50,22 @@ const CustomLineChart = ({ data }) => {
           axisLine={false}
           tickLine={false}
           tickFormatter={(date) => {
+            // Check if data has period property (for weekly/monthly views)
+            const dataPoint = data.find(d => d.date === date);
+            if (dataPoint && dataPoint.period) {
+              return dataPoint.period;
+            }
+            
+            // Handle different date formats
+            if (date.includes('-') && date.length === 7) {
+              // Monthly format: "YYYY-MM"
+              const [year, month] = date.split('-');
+              const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                               'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+              return monthNames[parseInt(month) - 1];
+            }
+            
+            // Daily format
             const d = new Date(date);
             return `${d.getDate()} ${d.toLocaleString('default', { month: 'short' })}`;
           }}
@@ -71,10 +87,26 @@ const CustomLineChart = ({ data }) => {
             boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
             padding: '12px',
           }}
-          formatter={(value) => [formatCurrency(value), 'Total']}
+          formatter={(value) => [formatCurrency(value), 'Balance']}
           labelFormatter={(date) => {
+            // Check if data has period property (for weekly/monthly views)
+            const dataPoint = data.find(d => d.date === date);
+            if (dataPoint && dataPoint.period) {
+              return dataPoint.period;
+            }
+            
+            // Handle different date formats
+            if (date.includes('-') && date.length === 7) {
+              // Monthly format: "YYYY-MM"
+              const [year, month] = date.split('-');
+              const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                               'July', 'August', 'September', 'October', 'November', 'December'];
+              return `${monthNames[parseInt(month) - 1]} ${year}`;
+            }
+            
+            // Daily format
             const d = new Date(date);
-            return `${d.toLocaleString('default', { month: 'long' })} ${d.getDate()}`;
+            return `${d.toLocaleString('default', { month: 'long' })} ${d.getDate()}, ${d.getFullYear()}`;
           }}
         />
         <Area
