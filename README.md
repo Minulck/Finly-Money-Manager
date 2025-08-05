@@ -1,7 +1,7 @@
 # Finly Money Manager
 
 <div align="center">
-  <img src="./finly-webapp/src/assets/FinlyLogo-nobackground.png" alt="Finly Logo" width="200"/>
+  <img src="./finly-webapp/src/assets/FinlyLogo.png" alt="Finly Logo" width="200"/>
   <h3>Your Personal Finance Tracking Solution</h3>
 </div>
 
@@ -208,7 +208,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Contact
 
 Minul - [GitHub Profile](https://github.com/Minulck)
-
+Email - [Peronal Email][minulck@gmail.com]
 Project Link: [https://github.com/Minulck/Finly-Money-Manager](https://github.com/Minulck/Finly-Money-Manager)
 
 ---
