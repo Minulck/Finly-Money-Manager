@@ -1,5 +1,4 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
-import { Label } from "recharts";
 
 const THEME_COLORS = {
   income: "#22c55e", // green-500
@@ -29,7 +28,7 @@ const CustomPieChart = ({ data, colors, totalAmount, showTextAbove }) => {
   ];
 
   return (
-    <div className="w-full h-[300px] relative " >
+    <div className="w-full h-[250px] relative">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
@@ -37,11 +36,11 @@ const CustomPieChart = ({ data, colors, totalAmount, showTextAbove }) => {
             cx="50%"
             cy="50%"
             innerRadius={70}
-            outerRadius={90}
-            paddingAngle={4}
+            outerRadius={100}
+            paddingAngle={5}
             dataKey="value"
-            strokeWidth={2}
-            stroke="#ffffff"
+            strokeWidth={4}
+            stroke="#ffffffff"
           >
             {data.map((entry, index) => (
               <Cell
@@ -50,30 +49,20 @@ const CustomPieChart = ({ data, colors, totalAmount, showTextAbove }) => {
                 className="drop-shadow-xl"
               />
             ))}
-            {/* Center Text */}
-            <Label
-              position="center"
-              style={{
-                fontSize: "14px",
-                fill: "#6b7280",
-                fontFamily: "sans-serif",
-              }}
-            />
-            <Label
-              position="centerBottom"
-              style={{
-                fontSize: "18px",
-                fill: "#111827",
-                fontWeight: "bold",
-                fontFamily: "sans-serif",
-              }}
-              value={`Balance: ${totalAmount.toLocaleString()}`}
-            />
           </Pie>
+          <Tooltip content={<CustomTooltip />} />
         </PieChart>
       </ResponsiveContainer>
 
-      <div className="flex justify-center gap-6 mt-6">
+      {/* Center Text Overlay */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+        <span className="text-sm text-gray-500 font-medium">Balance</span>
+        <span className="text-xl font-bold text-gray-900">
+          Rs:{totalAmount.toLocaleString()}
+        </span>
+      </div>
+
+      <div className="flex justify-center gap-6 mt-4">
         {data.map((entry, index) => (
           <div key={`legend-${index}`} className="flex items-center gap-2">
             <div
