@@ -1,5 +1,6 @@
 package com.Minul.finly_backend.service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -35,6 +36,10 @@ public class ProfileService {
 
     public boolean isEmailRegistered(ProfileDTO profileDTO) {
         return profileRepository.findByEmail(profileDTO.getEmail()).isPresent();
+    }
+
+    public boolean isEmailRegistered(String email) {
+        return profileRepository.findByEmail((email)).isPresent();
     }
 
     public ProfileDTO registerProfile (ProfileDTO profileDTO){
@@ -171,4 +176,58 @@ public class ProfileService {
             throw new RuntimeException("Login failed. Invalid password");
         }
     }
+
+    public void sendResetEmail(String email,String code) {
+        log.info("Sending password reset email to: {}", email);
+        log.info("Reset code: {}", code);
+        if (email == null || email.isEmpty()) {
+            throw new IllegalArgumentException("Email cannot be null or empty");
+        }
+
+        if (!isEmailRegistered(email)) {
+            throw new RuntimeException("Email not registered");
+        }
+            String body = """
+                    <p>Dear User,</p>
+                    <p>We received a request to reset your password. If you did not make this request, please ignore this email.</p>
+                    <p>To reset your password, please use the following code:</p>
+                    <p><strong>%s</strong></p>
+                    <p>If you did not request a password reset, please contact our support team immediately.</p>
+                    <p>Thank you for using our service!</p>
+                    <p>Best regards,</p>
+                    <p>Finly Team</p>
+                    """.formatted(code);
+            emailService.sendMail(
+                    email,
+                    "Password Reset Request - Finly",
+                    body
+            );
+    }
+
+    public void resetPassword(String email){
+        String newPassword = UUID.randomUUID().toString().substring(0, 8);
+        log.info("Resetting password for email: {}", email);
+
+        ProfileEntity profile = profileRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Email not registered"));
+
+        profile.setPassword(passwordEncoder.encode(newPassword));
+        profileRepository.save(profile);
+        String body = """
+                <p>Dear User,</p>
+                <p>Your password has been reset successfully. Your new password is:</p>
+                <p><strong>%s</strong></p>
+                <p>Please log in with this new password and change it to something more secure.</p>
+                <p>If you did not request a password reset, please contact our support team immediately.</p>
+                <p>Thank you for using our service!</p>
+                <p>Best regards,</p>
+                <p>Finly Team</p>
+                """.formatted(newPassword);
+        emailService.sendMail(
+                email,
+                "Password Reset Confirmation - Finly",
+                body
+        );
+    }
+
 }

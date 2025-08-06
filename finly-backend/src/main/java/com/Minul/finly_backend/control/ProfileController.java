@@ -45,9 +45,14 @@ public class ProfileController {
     @PostMapping("/login")
     public ResponseEntity<Map<String , Object>> login(@RequestBody AuthDTO authDTO){
         try{
+
+            if(!profileService.isEmailRegistered(authDTO.getEmail())){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        Map.of("message", "Email not registered. Please register first."));
+            }
             if(!profileService.isAccountActive(authDTO.getEmail())){
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
-                        Map.of("message", "Account is not active or Account is not a  registered One. Please try again."));
+                        Map.of("message", "Account is not active. Please activate your account first."));
             }
             else{
                 Map<String,Object> response = profileService.authenticationAndGenerateToken(authDTO);
@@ -86,6 +91,33 @@ public class ProfileController {
             return ResponseEntity.status(HttpStatus.OK).body("Password updated successfully.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password update failed. " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/reset-email")
+    public ResponseEntity<?> resetEmail(@RequestBody Map<String, String> emailData) {
+        log.info("Sending password reset email to: {}", emailData.get("email"));
+        log.info("Reset code: {}", emailData.get("code"));
+       try{
+           profileService.sendResetEmail(emailData.get("email"), emailData.get("code"));
+              return ResponseEntity.status(HttpStatus.OK).body("Reset email sent successfully.");
+       }catch(Exception e){
+           log.error("Error sending reset email: {}", e.getMessage());
+           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+        }
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        log.info("Resetting password for email: {}", email);
+        try {
+            profileService.resetPassword(email);
+            return ResponseEntity.status(HttpStatus.OK).body("Password reset successfully. Please check your email");
+        } catch (Exception e) {
+            log.error("Error resetting password: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password reset failed. " + e.getMessage());
         }
     }
 }

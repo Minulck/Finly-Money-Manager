@@ -11,7 +11,7 @@ const axiosConfig = axios.create({
 
 
 // Exclude endpoints from token requirement
-const excludeEndpoints = ["/login", "/register","/health","/activate"];
+const excludeEndpoints = ["/login", "/register","/health","/activate", "/reset-email", "/reset-password"];
 
 
 // Request interceptor to add token to headers if available

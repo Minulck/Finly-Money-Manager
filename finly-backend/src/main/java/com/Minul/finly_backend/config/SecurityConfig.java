@@ -36,7 +36,7 @@ public class SecurityConfig {
         httpSecurity.cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/health","/login","/register","/activate").permitAll()
+                        .requestMatchers("/health","/login","/register","/activate","/reset-email","/reset-password").permitAll()
                         .anyRequest().authenticated())
                         .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

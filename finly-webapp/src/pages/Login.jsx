@@ -123,13 +123,22 @@ const Login = () => {
               )}
             </button>
 
-            <p className="text-sm text-slate-800 text-center mt-2">
+            <p className="text-sm text-slate-800 text-center mt-2 mb-2 ">
               Don't have an account?{" "}
               <Link
                 to="/signup"
-                className="text-primary underline font-medium hover:text-primary-dark transition-colors hover:text-blue-600"
+                className=" text-primary underline font-medium hover:text-primary-dark transition-colors hover:text-blue-600"
               >
                 Sign Up
+              </Link>
+            </p>
+            <p className="text-sm text-slate-800 text-center ">
+              Forgot your password?{" "}
+              <Link
+                to="/password-reset"
+                className="text-primary underline font-medium hover:text-primary-dark transition-colors hover:text-blue-600"
+              >
+                Reset it here
               </Link>
             </p>
           </form>

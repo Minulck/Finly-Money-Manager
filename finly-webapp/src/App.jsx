@@ -8,6 +8,7 @@ import Expense from "./pages/Expense.jsx";
 import Category from "./pages/Category.jsx";
 import Filter from "./pages/Filter.jsx";
 import Settings from "./pages/Settings.jsx";
+import PasswordReset from "./pages/PasswordReset.jsx";
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
           <Route path="/category" element={<Category />} />
           <Route path="/filter" element={<Filter />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/password-reset" element={<PasswordReset />} />
         </Routes>
       </BrowserRouter>
     </>

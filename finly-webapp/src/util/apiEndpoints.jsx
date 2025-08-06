@@ -17,4 +17,6 @@ export const API_ENDPOINTS = {
     INCOME: `${BASE_API_URL}/incomes`,
     EXPENSE: `${BASE_API_URL}/expenses`,
     DASHBOARD: `${BASE_API_URL}/dashboard/dashboard-data`,
+    SEND_VERIFICATION_CODE: `${BASE_API_URL}/reset-email`,
+    RESET_PASSWORD: `${BASE_API_URL}/reset-password`,
 }
