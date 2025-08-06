@@ -1,17 +1,19 @@
 package com.Minul.finly_backend.service;
 
-import com.Minul.finly_backend.dto.ExpenseDTO;
-import com.Minul.finly_backend.entity.ProfileEntity;
-import com.Minul.finly_backend.repository.ProfileRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
+import com.Minul.finly_backend.dto.ExpenseDTO;
+import com.Minul.finly_backend.entity.ProfileEntity;
+import com.Minul.finly_backend.repository.ProfileRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
@@ -28,7 +30,7 @@ public class NotificationService {
     @Value("${frontend.url}")
     private String frontendUrl;
 
-    @Scheduled(cron = "0 0 19 * * *" , zone = "Asia/Colombo")
+    @Scheduled(cron = "0 * * * * *" , zone = "Asia/Colombo")
     public void sendDailyIncomeExpenseReminder(){
         log.info("Sending daily income and expense reminder email to all users");
         List<ProfileEntity> profiles = profileRepository.findAll();
@@ -51,7 +53,7 @@ public class NotificationService {
         log.info("Daily income and expense reminder email sent to all users");
     }
 
-    @Scheduled(cron = "0 0 22 * * *", zone = "Asia/Colombo")
+    @Scheduled(cron = "0 * * * * *", zone = "Asia/Colombo")
     public void sendDailyExpenseSummary() {
         log.info("Sending daily expense summary email to all users");
         List<ProfileEntity> profiles = profileRepository.findAll();
