@@ -8,7 +8,7 @@ const FinanceOverview = ({totalIncome, totalExpense, totalBalance}) => {
     ]
     
     return(
-        <div className="card">
+        <div className="card bg-white p-4 rounded-lg shadow-md">
             <div className="flex items-center justify-between">
                 <h5 className="text-lg">
                     Finance Overview
