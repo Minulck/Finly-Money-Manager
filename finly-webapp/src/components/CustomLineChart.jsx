@@ -24,7 +24,7 @@ const CustomLineChart = ({ data,isIncome,isExpense }) => {
     }).format(value);
   };
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width="100%" height={300} minWidth={600}>
       <LineChart
         data={data}
         margin={{
@@ -70,14 +70,16 @@ const CustomLineChart = ({ data,isIncome,isExpense }) => {
             return `${d.getDate()} ${d.toLocaleString('default', { month: 'short' })}`;
           }}
           stroke="#6b7280"
-          fontSize={12}
+          fontSize={14}
+          interval="preserveStartEnd"
         />
         <YAxis
           axisLine={false}
           tickLine={false}
           tickFormatter={(value) => formatCurrency(value)}
           stroke="#6b7280"
-          fontSize={12}
+          fontSize={14}
+          width={80}
         />
         <Tooltip
           contentStyle={{
@@ -245,13 +247,13 @@ const CustomLineChart = ({ data,isIncome,isExpense }) => {
           stroke={indigo}
           strokeWidth={3}
           dot={{
-            r: 4,
+            r: 5,
             fill: 'white',
             stroke: indigo,
             strokeWidth: 2,
           }}
           activeDot={{
-            r: 6,
+            r: 8,
             fill: 'white',
             stroke: indigo,
             strokeWidth: 3,

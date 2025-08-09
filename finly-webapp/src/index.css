@@ -6,3 +6,42 @@ body{
   background-color: #fcfbfc; /* Tailwind's gray-100 */
  overflow-x:hidden;
 }
+
+/* Custom scrollbar styles for chart containers */
+.overflow-x-auto {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e0 #f7fafc;
+}
+
+.overflow-x-auto::-webkit-scrollbar {
+  height: 6px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-track {
+  background: #f7fafc;
+  border-radius: 3px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 3px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0;
+}
+
+/* Enhanced mobile chart responsiveness */
+@media (max-width: 768px) {
+  .chart-container {
+    height: 350px !important;
+  }
+  
+  .chart-min-width {
+    min-width: 700px;
+  }
+  
+  .pie-chart-container {
+    min-width: 400px;
+  }
+}

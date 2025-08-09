@@ -149,8 +149,16 @@ const MonthlyOverview = () =>{
             </div>
           </div>
         ) : (
-          <div className="h-[300px] w-full">
-            <CustomLineChart data={chartData} isExpense={false} isIncome={false} />
+          <div className="relative">
+            <div className="h-[300px] chart-container w-full overflow-x-auto">
+              <div className="min-w-[600px] chart-min-width h-full">
+                <CustomLineChart data={chartData} isExpense={false} isIncome={false} />
+              </div>
+            </div>
+            {/* Mobile scroll hint */}
+            <div className="md:hidden absolute top-2 right-2 text-xs text-gray-400 bg-white/80 px-2 py-1 rounded">
+              ← Scroll →
+            </div>
           </div>
         )}
       </div>

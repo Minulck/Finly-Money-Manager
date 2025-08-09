@@ -40,7 +40,7 @@ const MenuBar = ({ activeMenu }) => {
   }, [showDropdown]);
 
   return (
-    <div className="flex items-center justify-between gap-5 bg-white border-b border-gray-200/50 backdrop-blur-[2px] py-4 px-4 sm:px-7 sticky top-0 z-30">
+    <div className="flex items-center justify-between gap-5 bg-white border-b border-gray-200/50 backdrop-blur-[2px] py-2 px-4 sm:px-7 sticky top-0 z-30">
       {/* left side - menu button and title*/}
       <div className="flex items-center gap-5">
         <button
@@ -62,9 +62,9 @@ const MenuBar = ({ activeMenu }) => {
       <div className="relative" ref={dropDownRef}>
         <button
           onClick={handleDropdown}
-          className="flex  item-center justify-center px-5 py-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors duration-200 focus:outline-none text-black focus:ring-2 focus:ring-emerald-800 focus:ring-offset-2"
+          className="flex  item-center justify-center px-5 py-1 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors duration-200 focus:outline-none text-black focus:ring-2 focus:ring-emerald-800 focus:ring-offset-2"
         >
-          <User className="m-auto text-emerald-500 mr-4  rounded-" size={30} />
+          <User className="m-auto text-emerald-500 mr-4  rounded-" size={25} />
           <p className="flex items-center justify-center">
             {(user.fullName || "").split(" ")[0]}
           </p>

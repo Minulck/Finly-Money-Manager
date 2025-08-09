@@ -28,7 +28,7 @@ const CustomPieChart = ({ data, colors, totalAmount, showTextAbove }) => {
   ];
 
   return (
-    <div className="w-full h-[220px] relative ">
+    <div className="w-full h-[200px] relative pie-chart-container">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
