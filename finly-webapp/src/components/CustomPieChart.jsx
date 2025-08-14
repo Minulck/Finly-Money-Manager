@@ -9,7 +9,7 @@ const THEME_COLORS = {
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-white p-2 shadow-lg rounded border">
+      <div className="bg-white p-1 shadow-lg rounded border">
         <p className="text-sm font-medium">{payload[0].name}</p>
         <p className="text-sm font-bold">
           ₹{payload[0].value.toLocaleString()}
@@ -62,7 +62,7 @@ const CustomPieChart = ({ data, colors, totalAmount, showTextAbove }) => {
         </span>
       </div>
 
-      <div className="flex justify-center gap-6 mt-4 bg-emerald-100/40 p-2 rounded shadow">
+      <div className="flex items-center justify-center gap-6 mt-4 bg-emerald-100/40  p-1 w-full rounded shadow">
         {data.map((entry, index) => (
           <div key={`legend-${index}`} className="flex items-center gap-2">
             <div

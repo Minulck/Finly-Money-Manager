@@ -14,7 +14,7 @@ const FinanceOverview = ({totalIncome, totalExpense, totalBalance}) => {
                     Finance Overview
                 </h5>
             </div>
-            <div className="w-full  relative">
+            <div className="w-full ">
                 <CustomPieChart 
                   totalAmount={totalBalance}
                   data={balanceData} />

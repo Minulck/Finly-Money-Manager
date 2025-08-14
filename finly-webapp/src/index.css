@@ -42,6 +42,9 @@ body{
   }
   
   .pie-chart-container {
-    min-width: 400px;
+    min-width: 0;
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
   }
 }
