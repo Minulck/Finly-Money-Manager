@@ -42,11 +42,11 @@ export const SIDE_BAR_DATA = [
                 icon : FunnelPlus,
                 path: "/filter"
         },
-        {
-                id:"06",
-                label:"Targets",
-                icon : Target ,
-                path: "/target"
-        }
+        // {
+        //         id:"06",
+        //         label:"Targets",
+        //         icon : Target ,
+        //         path: "/target"
+        // }
 
 ]

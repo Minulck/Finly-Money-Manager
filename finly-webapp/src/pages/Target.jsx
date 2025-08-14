@@ -5,7 +5,7 @@ const Target=()=>{
     return(
              <div>
              <Dashboard activeMenu="Targets">
-                
+                helo
             </Dashboard>
         </div>
     );
