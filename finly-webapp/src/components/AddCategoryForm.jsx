@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 const AddCategoryForm = ({ onAddCategory, isEditing, initialCategoryData, loading }) => {
   const [category, setCategory] = useState({
     name: "",
-    type: "income",
+    type: "",
     icon: "",
     bucket: "Needs"
   });
@@ -17,7 +17,7 @@ const AddCategoryForm = ({ onAddCategory, isEditing, initialCategoryData, loadin
     } else {
       setCategory({
         name: "",
-        type: "income",
+        type: "",
         icon: "",
         bucket: "Needs"
       });

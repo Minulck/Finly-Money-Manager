@@ -144,8 +144,8 @@ public class ProfileService {
                             CategoryEntity.builder().name("📈 Investments").bucket("Savings").type("expense").profile(profile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f3e6.png").build(),
 
                             // Income
-                            CategoryEntity.builder().name("💵 Salary").bucket("Income").type("income").profile(profile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4b5.png").build()
-                            CategoryEntity.builder().name("📈 Interest").bucket("Income").type("income").profile(profile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f3e6.png").build(),
+                            CategoryEntity.builder().name("💵 Salary").bucket("Income").type("income").profile(profile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4b5.png").build(),
+                            CategoryEntity.builder().name("📈 Interest").bucket("Income").type("income").profile(profile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f3e6.png").build()
                     );
 
                     categoryRepository.saveAll(defaults);

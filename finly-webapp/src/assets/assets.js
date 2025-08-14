@@ -2,7 +2,7 @@ import finly  from './FinlyLogo.png';
 import finlyicon from './finlyicon.png';
 import finlynobg from './FinlyLogo-nobackground.png';
 import background from './login-background.png';
-import { LayoutDashboard, List, Wallet,Coins, FunnelPlus } from 'lucide-react';
+import { LayoutDashboard, List, Wallet,Coins, FunnelPlus,Target } from 'lucide-react';
 
 export const assets = {
         finly,
@@ -42,5 +42,11 @@ export const SIDE_BAR_DATA = [
                 icon : FunnelPlus,
                 path: "/filter"
         },
+        {
+                id:"06",
+                label:"Targets",
+                icon : Target ,
+                path: "/target"
+        }
 
 ]

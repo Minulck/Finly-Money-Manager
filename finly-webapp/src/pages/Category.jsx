@@ -72,6 +72,7 @@ const Category = () => {
           name,
           type,
           icon,
+          bucket: category.bucket
         }
       );
       console.log("Category updated: ", response.status);
@@ -107,7 +108,7 @@ const Category = () => {
           name,
           type,
           icon,
-          bucket: category.bucket || "Needs"
+          bucket: category.bucket
         }
       );
       if (response.status === 201) {
