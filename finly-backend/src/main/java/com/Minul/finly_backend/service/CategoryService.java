@@ -36,6 +36,7 @@ public class CategoryService {
                 .profile(profile)
                 .name(categoryDTO.getName())
                 .icon(categoryDTO.getIcon())
+                .bucket(categoryDTO.getBucket())
                 .type(categoryDTO.getType())
                 .build();
     }
@@ -49,6 +50,7 @@ public class CategoryService {
                 .type(categoryEntity.getType())
                 .createdAt(categoryEntity.getCreatedAt())
                 .updatedAt(categoryEntity.getUpdatedAt())
+                .bucket(categoryEntity.getBucket())
                 .build();
 
     }
@@ -83,15 +85,22 @@ public class CategoryService {
         CategoryEntity category =  categoryRepository.findByIdAndProfileId(categoryId, profile.getId())
                 .orElseThrow(() -> new RuntimeException("Category not found for the current user"));
 
-        if(category.getName().equals(categoryDTO.getName()) &&
-           category.getIcon().equals(categoryDTO.getIcon()) &&
-           category.getType().equals(categoryDTO.getType())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT,"Category with this name already exists for the current user.");
+        // Find another category with the same name for this user
+        CategoryEntity existingCategory = categoryRepository.findByNameAndProfileId(categoryDTO.getName(), profile.getId())
+                .orElse(null);
+
+        if (existingCategory != null && !existingCategory.getId().equals(categoryId)) {
+            // Another category with this name exists
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "Category with this name already exists for the current user.");
         }
 
+        // Update fields freely
         category.setName(categoryDTO.getName());
         category.setIcon(categoryDTO.getIcon());
         category.setType(categoryDTO.getType());
+        category.setBucket(categoryDTO.getBucket());
+
         CategoryEntity updatedCategory = categoryRepository.save(category);
         return toDTO(updatedCategory);
     }

@@ -25,6 +25,7 @@ public class CategoryEntity {
     private String name;
     private String icon;
     private String type;
+    private String bucket;
 
     @Column(updatable = false)
     @CreationTimestamp

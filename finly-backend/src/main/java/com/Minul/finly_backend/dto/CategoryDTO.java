@@ -20,5 +20,6 @@ public class CategoryDTO {
     private String type;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String bucket;
 
 }

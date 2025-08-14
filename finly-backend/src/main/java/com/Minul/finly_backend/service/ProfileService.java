@@ -4,8 +4,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.Minul.finly_backend.entity.CategoryEntity;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
+import com.Minul.finly_backend.repository.CategoryRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -30,6 +31,7 @@ public class ProfileService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+    private final CategoryRepository categoryRepository;
 
     @Value("${finly.activation.link}")
     String activationURL;
@@ -126,13 +128,35 @@ public class ProfileService {
                 .map(profile->{
                     profile.setIsActive(true);
                     profileRepository.save(profile);
+
+                    List<CategoryEntity> defaults = List.of(
+                            // Needs
+                            CategoryEntity.builder().name("Food & Groceries").bucket("Needs").type("expense").profile(profile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f6d2.png").build(),
+                            CategoryEntity.builder().name("Bills & Utilities").bucket("Needs").type("expense").profile(profile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4a1.png").build(),
+                            CategoryEntity.builder().name("Transportation").bucket("Needs").type("expense").profile(profile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f697.png").build(),
+
+                            // Wants
+                            CategoryEntity.builder().name("Eating Out").bucket("Wants").type("expense").profile(profile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f37d.png").build(),
+                            CategoryEntity.builder().name("Entertainment").bucket("Wants").type("expense").profile(profile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f3ac.png").build(),
+
+                            // Savings
+                            CategoryEntity.builder().name("Savings").bucket("Savings").type("income").profile(profile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4b0.png").build(),
+                            CategoryEntity.builder().name("📈 Investments").bucket("Savings").type("expense").profile(profile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f3e6.png").build(),
+
+                            // Income
+                            CategoryEntity.builder().name("💵 Salary").bucket("Income").type("income").profile(profile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4b5.png").build()
+                            CategoryEntity.builder().name("📈 Interest").bucket("Income").type("income").profile(profile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f3e6.png").build(),
+                    );
+
+                    categoryRepository.saveAll(defaults);
+
                     return true;
+
                 })
                 .orElse(false);
     }
 
     public boolean  isAccountActive (String email){
-
         return profileRepository.findByEmail(email)
                 .map(ProfileEntity::getIsActive)
                 .orElse(false);

@@ -59,6 +59,7 @@ const Category = () => {
   };
 
   const handleUpdateCategory = async (category) => {
+    setLoading(true);
     const { name, type, icon } = category;
     if (!name || !type) {
       toast.error("Please fill all the fields");
@@ -79,6 +80,7 @@ const Category = () => {
         setOpenEditCategoryModal(false);
         fetchCategories();
         setSelectedCategory(null);
+        setLoading(false);
       }
     } catch (error) {
       console.error("Error updating category:", error.response.data);
@@ -88,6 +90,7 @@ const Category = () => {
       setOpenEditCategoryModal(false);
       fetchCategories();
       setSelectedCategory(null);
+      setLoading(false);
     }
   };
 
@@ -104,6 +107,7 @@ const Category = () => {
           name,
           type,
           icon,
+          bucket: category.bucket || "Needs"
         }
       );
       if (response.status === 201) {

@@ -20,7 +20,7 @@ const CategoryList = ({ categories, onAddCategory, onEditCategory,onDelete }) =>
                 key={category.id}
                 className="group relative flex items-center gap-4 p-3 rounded-lg hover:bg-gray-200/60"
               >
-                <div className="w-12 h-12 flex  items-center justify-center text-xl text-gray-800 bg-emerald-100 rounded-full">
+                <div className={`w-12 h-12 flex  items-center justify-center text-xl text-gray-800 ${category.type === 'income' ? 'bg-emerald-100 rounded-full' : 'bg-red-100 rounded-full'}`}>
                   {category.icon ? (
                     <span className="2xl">
                       <img
@@ -31,7 +31,7 @@ const CategoryList = ({ categories, onAddCategory, onEditCategory,onDelete }) =>
                     </span>
                   ) : (
                     <Layers2
-                      className="text-primary text-emerald-600"
+                      className={`text-primary ${category.type === 'income' ? 'text-emerald-600' : 'text-red-600'}`}
                       size={24}
                     />
                   )}
