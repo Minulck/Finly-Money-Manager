@@ -2,7 +2,7 @@
     "name": "Finly Money Manager",
     "short_name": "Finly",
     "description": "A simple money management app to track your expenses and income.",
-    "start_url": "/index.html",
+  "start_url": "/",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#4CAF50",
