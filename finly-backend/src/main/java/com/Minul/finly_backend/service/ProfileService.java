@@ -44,26 +44,53 @@ public class ProfileService {
         return profileRepository.findByEmail((email)).isPresent();
     }
 
-    public ProfileDTO registerProfile (ProfileDTO profileDTO){
+    public ProfileDTO registerProfile(ProfileDTO profileDTO){
         ProfileEntity newProfile = toEntity(profileDTO);
         log.info("Profile details: {}", newProfile);
 
         newProfile.setActivationToken(UUID.randomUUID().toString());
         newProfile = profileRepository.save(newProfile);
 
+        // Send activation email
         String activationLink = activationURL +"/api/v1.0/activate?token=" + newProfile.getActivationToken();
         String subject = "Activate your Finly account";
         String body = "Click the link below to activate your account:\n" + activationLink;
 
-        System.out.println("Sending mail to " + newProfile.getEmail());
-        emailService.sendMail(
-                newProfile.getEmail(),
-                subject,
-                body);
-        System.out.println("Mail sent (or attempted).");
+        log.info("Sending mail to " + newProfile.getEmail());
+        emailService.sendMail(newProfile.getEmail(), subject, body);
+        log.info("Mail sent (or attempted).");
+
+        // Add default categories immediately
+        List<CategoryEntity> defaults = List.of(
+                // Needs
+                CategoryEntity.builder().name("Food & Groceries").bucket("Needs").type("expense").profile(newProfile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f6d2.png").build(),
+                CategoryEntity.builder().name("Bills & Utilities").bucket("Needs").type("expense").profile(newProfile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4a1.png").build(),
+                CategoryEntity.builder().name("Transportation").bucket("Needs").type("expense").profile(newProfile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f697.png").build(),
+
+                // Wants
+                CategoryEntity.builder().name("Eating Out").bucket("Wants").type("expense").profile(newProfile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f37d.png").build(),
+                CategoryEntity.builder().name("Entertainment").bucket("Wants").type("expense").profile(newProfile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f3ac.png").build(),
+
+                // Savings
+                CategoryEntity.builder().name("Savings").bucket("Savings").type("income").profile(newProfile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4b0.png").build(),
+                CategoryEntity.builder().name("Investments").bucket("Savings").type("expense").profile(newProfile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f3e6.png").build(),
+
+                // Income
+                CategoryEntity.builder().name("Salary").bucket("Income").type("income").profile(newProfile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4b5.png").build(),
+                CategoryEntity.builder().name("Interest").bucket("Income").type("income").profile(newProfile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f3e6.png").build()
+        );
+
+        try {
+            log.info("Saving default categories for profile: {}", newProfile.getEmail());
+            categoryRepository.saveAll(defaults);
+            log.info("Default categories saved successfully");
+        } catch (Exception e) {
+            log.error("Error saving default categories", e);
+        }
 
         return toDTO(newProfile);
     }
+
 
     public ProfileEntity toEntity(ProfileDTO profileDTO) {
         return ProfileEntity.builder()
@@ -128,28 +155,7 @@ public class ProfileService {
                 .map(profile->{
                     profile.setIsActive(true);
                     profileRepository.save(profile);
-
-                    List<CategoryEntity> defaults = List.of(
-                            // Needs
-                            CategoryEntity.builder().name("Food & Groceries").bucket("Needs").type("expense").profile(profile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f6d2.png").build(),
-                            CategoryEntity.builder().name("Bills & Utilities").bucket("Needs").type("expense").profile(profile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4a1.png").build(),
-                            CategoryEntity.builder().name("Transportation").bucket("Needs").type("expense").profile(profile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f697.png").build(),
-
-                            // Wants
-                            CategoryEntity.builder().name("Eating Out").bucket("Wants").type("expense").profile(profile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f37d.png").build(),
-                            CategoryEntity.builder().name("Entertainment").bucket("Wants").type("expense").profile(profile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f3ac.png").build(),
-
-                            // Savings
-                            CategoryEntity.builder().name("Savings").bucket("Savings").type("income").profile(profile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4b0.png").build(),
-                            CategoryEntity.builder().name("📈 Investments").bucket("Savings").type("expense").profile(profile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f3e6.png").build(),
-
-                            // Income
-                            CategoryEntity.builder().name("💵 Salary").bucket("Income").type("income").profile(profile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4b5.png").build(),
-                            CategoryEntity.builder().name("📈 Interest").bucket("Income").type("income").profile(profile).icon("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f3e6.png").build()
-                    );
-
-                    categoryRepository.saveAll(defaults);
-
+                    log.info("Profile activated: {}", profile.getEmail());
                     return true;
 
                 })
